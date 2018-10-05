@@ -51,12 +51,13 @@ const HomeStack = createStackNavigator({
 }, {
         initialRouteName: 'Home',
         headerMode: 'float',
+        headerLayoutPreset: 'center',
         navigationOptions: ({ navigation }) => ({
             headerTitleStyle: {
                 fontWeight: 'bold',
                 textAlign: 'center',
-                alignSelf: 'center',
                 flex: 1,
+                alignSelf: 'center',
                 fontFamily: 'FallingSkyCond',
             },
         }),
@@ -72,6 +73,7 @@ const CollectionStack = createStackNavigator({
 }, {
         initialRouteName: 'Category',
         headerMode: 'float',
+        headerLayoutPreset: 'center',
         cardStyle: { backgroundColor: '#FFFFFF' },
         navigationOptions: ({ navigation }) => ({
             headerTitleStyle: {
@@ -92,6 +94,7 @@ const SavedListingStack = createStackNavigator({
 }, {
         initialRouteName: 'SavedListing',
         headerMode: 'float',
+        headerLayoutPreset: 'center',
         cardStyle: { backgroundColor: '#FFFFFF' },
         navigationOptions: ({ navigation }) => ({
             headerTitleStyle: {
@@ -113,6 +116,7 @@ const SearchStack = createStackNavigator({
 }, {
         initialRouteName: 'Search',
         headerMode: 'float',
+        headerLayoutPreset: 'center',
         cardStyle: { backgroundColor: '#FFFFFF' },
         navigationOptions: ({ navigation }) => ({
             headerTitleStyle: {

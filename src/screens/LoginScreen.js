@@ -20,7 +20,7 @@ class LoginScreen extends React.Component {
             .then((response) => {
                 const { navigation } = this.props;
                 user_uid = response.user._user.uid;
-                firebase.firestore().collection('users').doc(user_uid).get().then(function (user) {
+                firebase.firestore().collection('Users').doc(user_uid).get().then(function (user) {
                     if (user.exists) {
                         navigation.dispatch({ type: 'Login', user: user });
                     } else {

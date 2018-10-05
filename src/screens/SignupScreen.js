@@ -43,8 +43,8 @@ class SignupScreen extends React.Component {
                     phone: phone,
                 };
                 user_uid = response.user._user.uid;
-                firebase.firestore().collection('users').doc(user_uid).set(data);
-                firebase.firestore().collection('users').doc(user_uid).get().then(function (user) {
+                firebase.firestore().collection('Users').doc(user_uid).set(data);
+                firebase.firestore().collection('Users').doc(user_uid).get().then(function (user) {
                     navigation.dispatch({ type: 'Login', user: user });
                 }).catch(function (error) {
                     const { code, message } = error;
