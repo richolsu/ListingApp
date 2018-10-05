@@ -2,14 +2,42 @@ import React from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import Button from 'react-native-button';
 import { AppStyles } from '../AppStyles';
+import firebase from 'react-native-firebase';
 
 class LoginScreen extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            loading: true,
+            email: 'jhon@gmail.com',
+            password: '111111',
+        };
     }
 
     onPressLogin = () => {
-        this.props.navigation.dispatch({ type: 'Login'});
+        const { email, password } = this.state;
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .then((response) => {
+                const { navigation } = this.props;
+                user_uid = response.user._user.uid;
+                firebase.firestore().collection('users').doc(user_uid).get().then(function (user) {
+                    if (user.exists) {
+                        navigation.dispatch({ type: 'Login', user: user });
+                    } else {
+                        alert("user does not exist!");
+                    }
+                }).catch(function (error) {
+                    const { code, message } = error;
+                    alert(message);
+                });
+            })
+            .catch((error) => {
+                const { code, message } = error;
+                alert(message);
+                // For details of error codes, see the docs
+                // The message contains the default Firebase string
+                // representation of the error
+            });
     }
 
     render() {
@@ -17,10 +45,10 @@ class LoginScreen extends React.Component {
             <View style={styles.container}>
                 <Text style={[styles.title, styles.leftTitle]}>Sign In</Text>
                 <View style={styles.InputContainer}>
-                    <TextInput style={styles.body} placeholder="E-mail or phone number" onChangeText={(text) => this.setState({ email: text })} placeholderTextColor={AppStyles.color.grey} underlineColorAndroid='transparent' />
+                    <TextInput style={styles.body} placeholder="E-mail or phone number" onChangeText={(text) => this.setState({ email: text })} value={this.state.email} placeholderTextColor={AppStyles.color.grey} underlineColorAndroid='transparent' />
                 </View>
                 <View style={styles.InputContainer}>
-                    <TextInput style={styles.body} secureTextEntry={true} placeholder="Password" onChangeText={(text) => this.setState({ password: text })}  placeholderTextColor={AppStyles.color.grey} underlineColorAndroid='transparent' />
+                    <TextInput style={styles.body} secureTextEntry={true} placeholder="Password" onChangeText={(text) => this.setState({ password: text })} value={this.state.password} placeholderTextColor={AppStyles.color.grey} underlineColorAndroid='transparent' />
                 </View>
                 <Button containerStyle={styles.loginContainer} style={styles.loginText} onPress={() => this.onPressLogin()}>Log in</Button>
             </View>

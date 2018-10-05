@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import Button from 'react-native-button';
 import { AppStyles } from '../AppStyles';
+import firebase from 'react-native-firebase';
 
 class SignupScreen extends React.Component {
 
@@ -17,8 +18,43 @@ class SignupScreen extends React.Component {
         };
     }
 
+    componentDidMount() {
+        this.authSubscription = firebase.auth().onAuthStateChanged((user) => {
+            this.setState({
+                loading: false,
+                user,
+            });
+        });
+    }
+
+    componentWillUnmount() {
+        this.authSubscription();
+    }
+
     onRegister = () => {
-        this.props.navigation.dispatch({ type: 'Login' });
+        const { email, password } = this.state;
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then((response) => {
+                const { navigation } = this.props;
+                const { fullname, phone, email } = this.state;
+                const data = {
+                    email: email,
+                    fullname: fullname,
+                    phone: phone,
+                };
+                user_uid = response.user._user.uid;
+                firebase.firestore().collection('users').doc(user_uid).set(data);
+                firebase.firestore().collection('users').doc(user_uid).get().then(function (user) {
+                    navigation.dispatch({ type: 'Login', user: user });
+                }).catch(function (error) {
+                    const { code, message } = error;
+                    alert(message);
+                });
+
+            }).catch((error) => {
+                const { code, message } = error;
+                alert(message);
+            });
     }
 
     render() {
