@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "531296618501",
+    "firebase_url": "https://listingapp-f0f38.firebaseio.com",
+    "project_id": "listingapp-f0f38",
+    "storage_bucket": "listingapp-f0f38.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:531296618501:android:75277ea79fec2179",
+        "android_client_info": {
+          "package_name": "com.listingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "531296618501-ijpinlrngquts5c8409gkuh1q5hkel1a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOJM4bdpX3wXWQyx1m5mkQCFohWn1S7pI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
