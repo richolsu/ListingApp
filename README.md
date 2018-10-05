@@ -1,4 +1,4 @@
-# RestaurantApp
+# ListingApp
 React Native App
 
 1. npm install -g react-native-cli
@@ -14,6 +14,6 @@ React Native App
 7. react-native link react-native-firebase
 8. logging
 ```
-react-native log-android
-react-native log-ios
+   $ react-native log-android
+   $ react-native log-ios
 ```
