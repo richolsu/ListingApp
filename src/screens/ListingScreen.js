@@ -33,7 +33,7 @@ class ListingScreen extends React.Component {
         const data = [];
         querySnapshot.forEach((doc) => {
             const listing = doc.data();
-            data.push(listing);
+            data.push({...listing, id:doc.id});
         });
 
         this.setState({
