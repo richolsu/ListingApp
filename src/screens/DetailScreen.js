@@ -4,9 +4,11 @@ import { AppStyles } from '../AppStyles';
 import firebase from 'react-native-firebase';
 import FastImage from 'react-native-fast-image'
 import Carousel, { Pagination } from 'react-native-snap-carousel';
-import MapView from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
+const LATITUDEDELTA = 0.0922;
+const LONGITUDEDELTA = 0.0421;
 
 class DetailsScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
@@ -106,14 +108,21 @@ class DetailsScreen extends React.Component {
                 <Text style={styles.title}> {this.state.data.name} </Text>
                 <Text style={styles.description}> {this.state.data.description} </Text>
                 <Text style={styles.title}> {'Location'} </Text>
-                <MapView style={styles.MapView}
+                <MapView style={styles.mapView}
                     initialRegion={{
-                        latitude: 37.78825,
-                        longitude: -122.4324,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
+                        latitude: this.state.data.coordinate._latitude,
+                        longitude: this.state.data.coordinate._longitude,
+                        latitudeDelta: LATITUDEDELTA,
+                        longitudeDelta: LONGITUDEDELTA,
                     }}
-                />
+                >
+                    <Marker
+                        coordinate={{
+                            latitude: this.state.data.coordinate._latitude,
+                            longitude: this.state.data.coordinate._longitude,
+                        }}
+                    />
+                </MapView>
             </ScrollView>
         );
     }
@@ -157,8 +166,9 @@ const styles = StyleSheet.create({
     },
     mapView: {
         width: '100%',
-        height:200,
-        backgroundColor: 'green'
+        height: 200,
+        backgroundColor: 'green',
+
     }
 
 });
