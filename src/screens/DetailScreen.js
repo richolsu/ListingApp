@@ -4,6 +4,7 @@ import { AppStyles } from '../AppStyles';
 import firebase from 'react-native-firebase';
 import FastImage from 'react-native-fast-image'
 import Carousel, { Pagination } from 'react-native-snap-carousel';
+import MapView from 'react-native-maps';
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
@@ -53,7 +54,7 @@ class DetailsScreen extends React.Component {
 
     renderItem = ({ item }) => (
         <TouchableOpacity >
-            <FastImage style={styles.photoItem} resizeMode={FastImage.resizeMode.cover } source={{ uri: item }} />
+            <FastImage style={styles.photoItem} resizeMode={FastImage.resizeMode.cover} source={{ uri: item }} />
         </TouchableOpacity>
     );
 
@@ -105,6 +106,14 @@ class DetailsScreen extends React.Component {
                 <Text style={styles.title}> {this.state.data.name} </Text>
                 <Text style={styles.description}> {this.state.data.description} </Text>
                 <Text style={styles.title}> {'Location'} </Text>
+                <MapView style={styles.MapView}
+                    initialRegion={{
+                        latitude: 37.78825,
+                        longitude: -122.4324,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                    }}
+                />
             </ScrollView>
         );
     }
@@ -120,15 +129,15 @@ const styles = StyleSheet.create({
         fontFamily: AppStyles.fontName.bold,
         color: AppStyles.color.text,
         fontSize: 25,
-        padding:10,
+        padding: 10,
     },
     description: {
         fontFamily: AppStyles.fontName.bold,
-        padding:10,
+        padding: 10,
         color: AppStyles.color.text,
     },
     photoItem: {
-        backgroundColor:'green',
+        backgroundColor: 'green',
         height: 250,
         width: '100%',
     },
@@ -146,6 +155,11 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         marginHorizontal: 0
     },
+    mapView: {
+        width: '100%',
+        height:200,
+        backgroundColor: 'green'
+    }
 
 });
 
