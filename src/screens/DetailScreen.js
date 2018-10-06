@@ -1,8 +1,11 @@
 import React from 'react';
-import { StyleSheet, ScrollView, Button, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, ScrollView, TouchableOpacity, Text, View } from 'react-native';
 import { AppStyles } from '../AppStyles';
 import firebase from 'react-native-firebase';
 import FastImage from 'react-native-fast-image'
+import Carousel, { Pagination } from 'react-native-snap-carousel';
+
+const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 class DetailsScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
@@ -14,11 +17,12 @@ class DetailsScreen extends React.Component {
 
         const { navigation } = props;
         const item = navigation.getParam('item');
-console.log(item);
+        console.log(item);
         this.ref = firebase.firestore().collection('Listings').doc(item.id);
         this.unsubscribe = null;
 
         this.state = {
+            activeSlide: 0,
             loading: false,
             data: item,
             page: 1,
@@ -47,18 +51,60 @@ console.log(item);
         this.unsubscribe();
     }
 
+    renderItem = ({ item }) => (
+        <TouchableOpacity >
+            <FastImage style={styles.photoItem} resizeMode={FastImage.resizeMode.cover } source={{ uri: item }} />
+        </TouchableOpacity>
+    );
+
+    renderSeparator = () => {
+        return (
+            <View
+                style={{
+                    width: 10,
+                    height: "100%",
+                }}
+            />
+        );
+    };
     render() {
-        
+        const { activeSlide } = this.state;
         return (
             <ScrollView style={styles.container}>
+                <View style={styles.carousel}>
+                    <Carousel
+                        ref={(c) => { this._slider1Ref = c; }}
+                        data={this.state.data.list_of_photos}
+                        renderItem={this.renderItem}
+                        sliderWidth={viewportWidth}
+                        itemWidth={viewportWidth}
+                        // hasParallaxImages={true}
+                        inactiveSlideScale={1}
+                        inactiveSlideOpacity={1}
+                        firstItem={0}
+                        loop={false}
+                        // loopClonesPerSide={2}
+                        autoplay={true}
+                        autoplayDelay={500}
+                        autoplayInterval={3000}
+                        onSnapToItem={(index) => this.setState({ activeSlide: index })}
+                    />
+                    <Pagination
+                        dotsLength={this.state.data.list_of_photos.length}
+                        activeDotIndex={activeSlide}
+                        containerStyle={styles.paginationContainer}
+                        dotColor={'rgba(255, 255, 255, 0.92)'}
+                        dotStyle={styles.paginationDot}
+                        inactiveDotColor='white'
+                        inactiveDotOpacity={0.4}
+                        inactiveDotScale={0.6}
+                        carouselRef={this._slider1Ref}
+                        tappableDots={!!this._slider1Ref}
+                    />
+                </View>
                 <Text style={styles.title}> {this.state.data.name} </Text>
-                <FastImage
-                    source={{
-                        uri: this.state.data.cover_photo
-                    }}
-                    style={styles.photo}
-                />
                 <Text style={styles.description}> {this.state.data.description} </Text>
+                <Text style={styles.title}> {'Location'} </Text>
             </ScrollView>
         );
     }
@@ -69,22 +115,36 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
         flex: 1,
-        padding: 10,
     },
     title: {
         fontFamily: AppStyles.fontName.bold,
         color: AppStyles.color.text,
         fontSize: 25,
+        padding:10,
     },
-    photo: {
+    description: {
+        fontFamily: AppStyles.fontName.bold,
+        padding:10,
+        color: AppStyles.color.text,
+    },
+    photoItem: {
+        backgroundColor:'green',
+        height: 250,
         width: '100%',
-        height: 300,
-        marginTop: 2,
     },
-    detail: {
-        height: 65,
-        width: 65,
-        marginBottom: 5,
+    paginationContainer: {
+        flex: 1,
+        position: 'absolute',
+        alignSelf: 'center',
+        // backgroundColor: 'green',
+        paddingVertical: 8,
+        marginTop: 220,
+    },
+    paginationDot: {
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+        marginHorizontal: 0
     },
 
 });
