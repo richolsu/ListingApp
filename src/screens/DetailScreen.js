@@ -7,8 +7,8 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 import MapView, { Marker } from 'react-native-maps';
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
-const LATITUDEDELTA = 0.0922;
-const LONGITUDEDELTA = 0.0421;
+const LATITUDEDELTA = 0.0422;
+const LONGITUDEDELTA = 0.0221;
 
 class DetailsScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
