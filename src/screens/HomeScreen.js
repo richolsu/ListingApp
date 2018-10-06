@@ -78,7 +78,7 @@ class HomeScreen extends React.Component {
     }
 
     onPressCategoryItem = (item) => {
-        this.props.navigation.navigate('Category', { item: item });
+        this.props.navigation.navigate('Listing', { item: item });
     }
 
     onPressListingItem = (item) => {
@@ -187,6 +187,7 @@ const styles = StyleSheet.create({
     },
     listingItemContainer: {
         justifyContent: 'center',
+        marginBottom: PRODUCT_ITEM_OFFSET,
         marginRight: PRODUCT_ITEM_OFFSET,
         width: (SCREEN_WIDTH - PRODUCT_ITEM_OFFSET * 3) / numColumns,
     },
