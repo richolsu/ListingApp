@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, Easing } from 'react-native';
+import { Animated, Easing, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 import { createReactNavigationReduxMiddleware, reduxifyNavigator } from 'react-navigation-redux-helpers';
@@ -15,7 +15,7 @@ import SavedListingScreen from '../screens/SavedListingScreen';
 import SearchScreen from '../screens/SearchScreen';
 import SignupScreen from '../screens/SignupScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
-
+import { AppIcon } from '../AppStyles';
 
 const noTransitionConfig = () => ({
     transitionSpec: {
@@ -145,18 +145,19 @@ const TabNavigator = createBottomTabNavigator(
                 const { routeName } = navigation.state;
                 let iconName;
                 if (routeName === 'Home') {
-                    iconName = "home";
+                    iconName = AppIcon.images.home;
                 } else if (routeName === 'Collections') {
-                    iconName = "book";
+                    iconName = AppIcon.images.collections;
                 } else if (routeName === 'Saved') {
-                    iconName = "heart";
+                    iconName = AppIcon.images.heart;
                 } else if (routeName === 'Search') {
-                    iconName = "search";
+                    iconName = AppIcon.images.search;
                 }
 
+                
                 // You can return any component that you like here! We usually use an
                 // icon component from react-native-vector-icons
-                return <Icon name={iconName} size={25} color={tintColor} />;
+                return <Image tintColor={focused?'tomato':'gray'} source={iconName}/>;
             },
         }),
         tabBarOptions: {

@@ -1,12 +1,12 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Image, Text, View } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { AppIcon } from '../AppStyles';
 
 export default class FilterButton extends React.Component {
   render() {
     return (
       <TouchableOpacity style={styles.headerButtonContainer} onPress={this.props.onPress}>
-        <Icon name={'home'} size={25} color={'tomato'} />
+        <Image style={AppIcon.style} source={AppIcon.images.filter}/>
       </TouchableOpacity>
     );
   }
@@ -22,5 +22,5 @@ const styles = StyleSheet.create({
     width: 35,
     height: 35,
     margin: 6
-  }
+  },
 });  

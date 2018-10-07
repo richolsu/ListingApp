@@ -1,12 +1,12 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Image, Text, View } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { AppIcon } from '../AppStyles';
 
 export default class LeftButton extends React.Component {
   render() {
     return (
       <TouchableOpacity style={styles.headerButtonContainer} onPress={this.props.onPress}>
-        <Icon name={'home'} size={25} color={'tomato'} />
+        <Image style={AppIcon.style} source={AppIcon.images.home}/>
       </TouchableOpacity>
     );
   }
