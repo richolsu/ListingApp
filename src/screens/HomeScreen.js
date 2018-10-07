@@ -1,9 +1,9 @@
 import React from 'react';
-import { ScrollView, Dimensions, TouchableOpacity, FlatList, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, Dimensions, Image, TouchableOpacity, FlatList, StyleSheet, Text, View } from 'react-native';
 import LeftButton from '../components/LeftButton';
 import FilterButton from '../components/FilterButton';
 import firebase from 'react-native-firebase';
-import { AppStyles } from '../AppStyles';
+import { AppStyles, AppIcon } from '../AppStyles';
 import FastImage from 'react-native-fast-image'
 
 // screen sizing
@@ -14,8 +14,10 @@ const SCREEN_WIDTH = width < height ? width : height;
 const numColumns = 2;
 
 // item size
-const PRODUCT_ITEM_HEIGHT = 100;
+const PRODUCT_ITEM_HEIGHT = 130;
 const PRODUCT_ITEM_OFFSET = 15;
+const SAVED_POSTION_TOP = 5;
+const SAVED_ICON_SiZE = 25;
 
 class HomeScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
@@ -110,6 +112,7 @@ class HomeScreen extends React.Component {
             <TouchableOpacity onPress={() => this.onPressListingItem(item)}>
                 <View style={styles.listingItemContainer}>
                     <FastImage style={styles.listingPhoto} source={{ uri: item.cover_photo }} />
+                    <Image style={styles.savedIcon} tintColor={'white'} source={AppIcon.images.heartFilled} />
                     <Text style={styles.listingName}>{item.name}</Text>
                     <Text style={styles.listingPlace}>{item.place}</Text>
                 </View>
@@ -191,9 +194,20 @@ const styles = StyleSheet.create({
         marginRight: PRODUCT_ITEM_OFFSET,
         width: (SCREEN_WIDTH - PRODUCT_ITEM_OFFSET * 3) / numColumns,
     },
+    photo: {
+        // position: "absolute",
+    },
     listingPhoto: {
         width: (SCREEN_WIDTH - PRODUCT_ITEM_OFFSET * 3) / numColumns,
         height: PRODUCT_ITEM_HEIGHT,
+    },
+    savedIcon: {
+        position: "absolute",
+        top: SAVED_POSTION_TOP,
+        left: (SCREEN_WIDTH - PRODUCT_ITEM_OFFSET * 3) / numColumns - SAVED_POSTION_TOP - SAVED_ICON_SiZE,
+        width: SAVED_ICON_SiZE,
+        tintColor: 'tomato',
+        height: SAVED_ICON_SiZE
     },
     listingName: {
         fontSize: 15,
@@ -204,7 +218,7 @@ const styles = StyleSheet.create({
     listingPlace: {
         fontFamily: AppStyles.fontName.bold,
         color: AppStyles.color.text,
-        marginTop:5,
+        marginTop: 5,
     },
 });
 

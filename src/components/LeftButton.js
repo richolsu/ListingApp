@@ -6,7 +6,7 @@ export default class LeftButton extends React.Component {
   render() {
     return (
       <TouchableOpacity style={styles.headerButtonContainer} onPress={this.props.onPress}>
-        <Image style={AppIcon.style} source={AppIcon.images.home}/>
+        <Image style={AppIcon.style} source={AppIcon.images.map}/>
       </TouchableOpacity>
     );
   }

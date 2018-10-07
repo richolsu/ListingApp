@@ -62,9 +62,7 @@ class CategoryScreen extends React.Component {
         <TouchableOpacity onPress={() => this.onPress(item)}>
             <View style={styles.container}>
                 <FastImage
-                    placeholderColor={AppStyles.color.placeholder}
                     style={styles.photo}
-                    resizeMode={FastImage.resizeMode.cover }
                     source={{ uri: item.photo }} />
                 <View style={styles.overlay} />
                 <Text numberOfLines={3} style={styles.title}>
