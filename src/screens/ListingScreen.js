@@ -3,6 +3,7 @@ import { StyleSheet, FlatList, Text, Image, View } from 'react-native';
 import { AppStyles } from '../AppStyles';
 import firebase from 'react-native-firebase';
 import { ListItem } from "react-native-elements";
+import priceFormatter from "../components/CurrencyFormatter";
 
 class ListingScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
@@ -77,7 +78,7 @@ class ListingScreen extends React.Component {
                         <Text style={styles.description}>{item.description}</Text>
                         <Text style={styles.place}>{item.place}</Text>
                     </View>
-                    <Text style={styles.price}>${item.price}</Text>
+                    <Text style={styles.price}>{priceFormatter(item.price)}</Text>
                 </View>
             }
             onPress={() => this.onPress(item)}
