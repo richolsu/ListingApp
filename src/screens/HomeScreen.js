@@ -5,6 +5,8 @@ import FilterButton from '../components/FilterButton';
 import firebase from 'react-native-firebase';
 import { AppStyles, AppIcon } from '../AppStyles';
 import FastImage from 'react-native-fast-image'
+import SavedButton from '../components/SavedButton';
+import { connect } from 'react-redux';
 
 // screen sizing
 const { width, height } = Dimensions.get('window');
@@ -31,13 +33,16 @@ class HomeScreen extends React.Component {
 
         this.categoriesRef = firebase.firestore().collection('Categories').orderBy('order');
         this.listingsRef = firebase.firestore().collection('Listings');
+        this.savedListingsRef = firebase.firestore().collection('SavedListings').where('user_id', '==', this.props.user.id);
         this.categoriesUnsubscribe = null;
         this.listingsUnsubscribe = null;
+        this.savedListingsUnsubscribe = null;
 
         this.state = {
             activeSlide: 0,
             categories: [],
             listings: [],
+            savedListings: [],
             loading: false,
             error: null,
             refreshing: false
@@ -50,7 +55,6 @@ class HomeScreen extends React.Component {
             const category = doc.data();
             data.push({ ...category, id: doc.id });
         });
-
         this.setState({
             categories: data,
             loading: false,
@@ -61,6 +65,11 @@ class HomeScreen extends React.Component {
         const data = [];
         querySnapshot.forEach((doc) => {
             const listing = doc.data();
+            if (this.state.savedListings.findIndex(k => k == doc.id) >= 0) {
+                listing.saved = true;
+            } else {
+                listing.saved = false;
+            }
             data.push({ ...listing, id: doc.id });
         });
         this.setState({
@@ -69,9 +78,34 @@ class HomeScreen extends React.Component {
         });
     }
 
+    onSavedListingsCollectionUpdate = (querySnapshot) => {
+        const savedListingdata = [];
+        querySnapshot.forEach((doc) => {
+            const savedListing = doc.data();
+            savedListingdata.push(savedListing.listing_id);
+        });
+        const listingsData = [];
+        this.state.listings.forEach((listing) => {
+            const temp = listing;
+            if (savedListingdata.findIndex(k => k == temp.id) >= 0) {
+                temp.saved = true;
+            } else {
+                temp.saved = false;
+            }
+            listingsData.push(temp);
+        });
+
+        this.setState({
+            savedListings: savedListingdata,
+            listings: listingsData,
+            loading: false,
+        });
+    }
+
     componentDidMount() {
-        this.categoriesUnsubscribe = this.categoriesRef.onSnapshot(this.onCategoriesCollectionUpdate)
-        this.listingsUnsubscribe = this.listingsRef.onSnapshot(this.onListingsCollectionUpdate)
+        this.categoriesUnsubscribe = this.categoriesRef.onSnapshot(this.onCategoriesCollectionUpdate);
+        this.listingsUnsubscribe = this.listingsRef.onSnapshot(this.onListingsCollectionUpdate);
+        this.savedListingsUnsubscribe = this.savedListingsRef.onSnapshot(this.onSavedListingsCollectionUpdate);
     }
 
     componentWillUnmount() {
@@ -85,6 +119,27 @@ class HomeScreen extends React.Component {
 
     onPressListingItem = (item) => {
         this.props.navigation.navigate('Detail', { item: item });
+    }
+
+    onPressSavedIcon = (item) => {
+        if (item.saved) {
+            firebase.firestore().collection('SavedListings').where('listing_id', '==', item.id)
+            .where('user_id', '==', this.props.user.id)
+            .get().then(function(querySnapshot){
+                querySnapshot.forEach(function (doc) {
+                    doc.ref.delete();
+                });
+            });
+        } else {
+            firebase.firestore().collection('SavedListings').add({
+                user_id: this.props.user.id,
+                listing_id: item.id,
+            }).then(function (docRef) {
+
+            }).catch(function (error) {
+                alert(error);
+            });
+        }
     }
 
     renderCategoryItem = ({ item }) => (
@@ -112,7 +167,7 @@ class HomeScreen extends React.Component {
             <TouchableOpacity onPress={() => this.onPressListingItem(item)}>
                 <View style={styles.listingItemContainer}>
                     <FastImage style={styles.listingPhoto} source={{ uri: item.cover_photo }} />
-                    <Image style={styles.savedIcon} tintColor={'white'} source={AppIcon.images.heartFilled} />
+                    <SavedButton style={styles.savedIcon} onPress={() => this.onPressSavedIcon(item)} item={item} />
                     <Text style={styles.listingName}>{item.name}</Text>
                     <Text style={styles.listingPlace}>{item.place}</Text>
                 </View>
@@ -206,7 +261,6 @@ const styles = StyleSheet.create({
         top: SAVED_POSTION_TOP,
         left: (SCREEN_WIDTH - PRODUCT_ITEM_OFFSET * 3) / numColumns - SAVED_POSTION_TOP - SAVED_ICON_SiZE,
         width: SAVED_ICON_SiZE,
-        tintColor: 'tomato',
         height: SAVED_ICON_SiZE
     },
     listingName: {
@@ -222,4 +276,9 @@ const styles = StyleSheet.create({
     },
 });
 
-export default HomeScreen;
+const mapStateToProps = state => ({
+    user: state.auth.user,
+});
+
+export default connect(mapStateToProps)(HomeScreen);
+
