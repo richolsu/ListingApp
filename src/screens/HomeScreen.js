@@ -42,6 +42,7 @@ class HomeScreen extends React.Component {
             activeSlide: 0,
             categories: [],
             listings: [],
+            selectedCategoryName:'',
             savedListings: [],
             loading: false,
             error: null,
@@ -59,6 +60,8 @@ class HomeScreen extends React.Component {
             categories: data,
             loading: false,
         });
+        if (data.length>0)
+            this.onPressCategoryItem(data[0]);
     }
 
     onListingsCollectionUpdate = (querySnapshot) => {
@@ -111,10 +114,13 @@ class HomeScreen extends React.Component {
     componentWillUnmount() {
         this.categorieUnsubscribe();
         this.listingsUnsubscribe();
+        this.savedListingsUnsubscribe();
     }
 
     onPressCategoryItem = (item) => {
-        this.props.navigation.navigate('Listing', { item: item });
+        this.state.selectedCategoryName = item.name;
+        this.listingsRef = firebase.firestore().collection('Listings').where('category_id', '==', item.id);
+        this.listingsUnsubscribe = this.listingsRef.onSnapshot(this.onListingsCollectionUpdate);
     }
 
     onPressListingItem = (item) => {
@@ -190,7 +196,7 @@ class HomeScreen extends React.Component {
                         keyExtractor={item => `${item.id}`}
                     />
                 </View>
-                <Text style={[styles.title, styles.listingTitle]}>Homes in San Francisco </Text>
+                <Text style={[styles.title, styles.listingTitle]}>{this.state.selectedCategoryName} </Text>
                 <View style={styles.listings}>
                     <FlatList
                         vertical
