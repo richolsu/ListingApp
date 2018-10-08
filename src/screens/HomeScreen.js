@@ -1,8 +1,7 @@
 import React from 'react';
 import { ScrollView, Dimensions, ActivityIndicator, TouchableOpacity, FlatList, StyleSheet, Text, View } from 'react-native';
 import Button from 'react-native-button';
-import LeftButton from '../components/LeftButton';
-import FilterButton from '../components/FilterButton';
+import HeaderButton from '../components/HeaderButton';
 import firebase from 'react-native-firebase';
 import { AppStyles, AppIcon } from '../AppStyles';
 import FastImage from 'react-native-fast-image'
@@ -25,8 +24,8 @@ const SAVED_ICON_SiZE = 25;
 class HomeScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         title: 'Home',
-        headerRight: <FilterButton onPress={() => { navigation.navigate('Filter') }} />,
-        headerLeft: <LeftButton onPress={() => { navigation.dispatch({ type: 'Logout' }) }} />,
+        headerRight: <HeaderButton icon={AppIcon.images.filter} onPress={() => { navigation.navigate('Filter') }} />,
+        headerLeft: <HeaderButton icon={AppIcon.images.map} onPress={() => { navigation.dispatch({ type: 'Logout' }) }} />,
     });
 
     constructor(props) {
@@ -34,7 +33,10 @@ class HomeScreen extends React.Component {
 
         this.categoriesRef = firebase.firestore().collection('Categories').orderBy('order');
         this.listingsRef = firebase.firestore().collection('Listings');
-        this.savedListingsRef = firebase.firestore().collection('SavedListings').where('user_id', '==', this.props.user.id);
+        if (this.props.user)
+            this.savedListingsRef = firebase.firestore().collection('SavedListings').where('user_id', '==', this.props.user.id);
+        else
+            this.savedListingsRef = firebase.firestore().collection('SavedListings');
         this.categoriesUnsubscribe = null;
         this.listingsUnsubscribe = null;
         this.savedListingsUnsubscribe = null;

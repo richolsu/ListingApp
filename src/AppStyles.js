@@ -32,6 +32,9 @@ export const AppStyles = {
 }
 
 export const AppIcon = {
+  container: {
+    padding: 10,
+  },
   style: {
     tintColor: 'tomato', 
     width: 25,
@@ -51,3 +54,15 @@ export const AppIcon = {
   }
 
 }
+
+export const HeaderButtonStyle = StyleSheet.create({
+  container: {
+    padding: 10,
+  },
+  image: {
+    justifyContent: 'center',
+    width: 35,
+    height: 35,
+    margin: 6
+  }
+});  

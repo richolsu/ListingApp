@@ -1,13 +1,15 @@
 import React from 'react';
 import { StyleSheet, FlatList, Text, Image, View } from 'react-native';
-import { AppStyles } from '../AppStyles';
+import { AppStyles, AppIcon } from '../AppStyles';
 import firebase from 'react-native-firebase';
 import { ListItem } from "react-native-elements";
 import priceFormatter from "../components/CurrencyFormatter";
+import HeaderButton from '../components/HeaderButton';
 
 class ListingScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         title: typeof (navigation.state.params) == 'undefined' || typeof (navigation.state.params.item) == 'undefined' ? 'Listing' : navigation.state.params.item.name,
+        headerRight: <HeaderButton icon={AppIcon.images.map} onPress={() => { navigation.navigate('Map') }} />,
     });
 
     constructor(props) {
