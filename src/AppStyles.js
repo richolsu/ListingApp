@@ -7,6 +7,7 @@ export const AppStyles = {
     white: 'white',
     facebook: '#4267b2',
     grey: 'grey',
+    greenBlue: '#00aea8',
     placeholder: '#a0a0a0'
   },
   fontSize: {

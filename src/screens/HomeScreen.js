@@ -1,5 +1,6 @@
 import React from 'react';
-import { ScrollView, Dimensions, Image, TouchableOpacity, FlatList, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, Dimensions, ActivityIndicator, TouchableOpacity, FlatList, StyleSheet, Text, View } from 'react-native';
+import Button from 'react-native-button';
 import LeftButton from '../components/LeftButton';
 import FilterButton from '../components/FilterButton';
 import firebase from 'react-native-firebase';
@@ -14,7 +15,7 @@ const { width, height } = Dimensions.get('window');
 const SCREEN_WIDTH = width < height ? width : height;
 
 const numColumns = 2;
-
+const INITIAL_SHOW_COUNT = 2;
 // item size
 const PRODUCT_ITEM_HEIGHT = 130;
 const PRODUCT_ITEM_OFFSET = 15;
@@ -42,10 +43,12 @@ class HomeScreen extends React.Component {
             activeSlide: 0,
             categories: [],
             listings: [],
-            selectedCategoryName:'',
+            allListings: [],
+            selectedCategoryName: '',
             savedListings: [],
             loading: false,
             error: null,
+            showedAll: false,
             refreshing: false
         };
     }
@@ -60,7 +63,7 @@ class HomeScreen extends React.Component {
             categories: data,
             loading: false,
         });
-        if (data.length>0)
+        if (data.length > 0)
             this.onPressCategoryItem(data[0]);
     }
 
@@ -75,9 +78,12 @@ class HomeScreen extends React.Component {
             }
             data.push({ ...listing, id: doc.id });
         });
+
         this.setState({
-            listings: data,
+            listings: data.slice(0, INITIAL_SHOW_COUNT),
+            allListings: data,
             loading: false,
+            showedAll: data.length <= INITIAL_SHOW_COUNT
         });
     }
 
@@ -127,15 +133,22 @@ class HomeScreen extends React.Component {
         this.props.navigation.navigate('Detail', { item: item });
     }
 
+    onShowAll = () => {
+        this.setState({
+            showedAll: true,
+            listings: this.state.allListings,
+        });
+    }
+
     onPressSavedIcon = (item) => {
         if (item.saved) {
             firebase.firestore().collection('SavedListings').where('listing_id', '==', item.id)
-            .where('user_id', '==', this.props.user.id)
-            .get().then(function(querySnapshot){
-                querySnapshot.forEach(function (doc) {
-                    doc.ref.delete();
+                .where('user_id', '==', this.props.user.id)
+                .get().then(function (querySnapshot) {
+                    querySnapshot.forEach(function (doc) {
+                        doc.ref.delete();
+                    });
                 });
-            });
         } else {
             firebase.firestore().collection('SavedListings').add({
                 user_id: this.props.user.id,
@@ -181,6 +194,14 @@ class HomeScreen extends React.Component {
         );
     };
 
+    renderListingFooter = () => {
+        return (
+            <Button containerStyle={styles.showAllButtonContainer} style={styles.showAllButtonText} onPress={() => this.onShowAll()}>
+                Show all({this.state.allListings.length})
+            </Button>
+        );
+    };
+
     render() {
         return (
             <ScrollView style={styles.container}>
@@ -201,6 +222,7 @@ class HomeScreen extends React.Component {
                     <FlatList
                         vertical
                         showsVerticalScrollIndicator={false}
+                        ListFooterComponent={!this.state.showedAll ? this.renderListingFooter : ''}
                         numColumns={2}
                         data={this.state.listings}
                         renderItem={this.renderListingItem}
@@ -248,6 +270,20 @@ const styles = StyleSheet.create({
         marginTop: 15,
         width: '100%',
         flex: 1,
+    },
+    showAllButtonContainer: {
+        borderWidth: 2,
+        borderRadius: 5,
+        borderColor: AppStyles.color.greenBlue,
+        height: 50,
+        width: '100%',
+    },
+    showAllButtonText: {
+        padding: 10,
+        textAlign: 'center',
+        color: AppStyles.color.greenBlue,
+        fontFamily: AppStyles.fontName.bold,
+        justifyContent: 'center',
     },
     listingItemContainer: {
         justifyContent: 'center',
