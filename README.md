@@ -17,3 +17,14 @@ React Native App
    $ react-native log-android
    $ react-native log-ios
 ```
+9. install Firebase in iOS
+```
+   pod init
+   pod 'Firebase/Core'
+      Podfile
+      platform :ios, '9.0'
+      pod 'Firebase/Core'
+      pod 'Firebase/Auth'
+      pod 'Firebase/Firestore'
+   pod install
+```
