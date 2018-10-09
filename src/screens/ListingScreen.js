@@ -9,7 +9,7 @@ import HeaderButton from '../components/HeaderButton';
 class ListingScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         title: typeof (navigation.state.params) == 'undefined' || typeof (navigation.state.params.item) == 'undefined' ? 'Listing' : navigation.state.params.item.name,
-        headerRight: <HeaderButton icon={AppIcon.images.map} onPress={() => { navigation.navigate('Map') }} />,
+        headerRight: <HeaderButton icon={AppIcon.images.map} onPress={() => { navigation.navigate('Map', {item: navigation.state.params.item}) }} />,
     });
 
     constructor(props) {
@@ -23,6 +23,7 @@ class ListingScreen extends React.Component {
         this.unsubscribe = null;
 
         this.state = {
+            category: item,
             loading: false,
             data: [],
             page: 1,
