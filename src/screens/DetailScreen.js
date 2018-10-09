@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     mapView: {
         width: '100%',
         height: 200,
-        backgroundColor: 'green',
+        backgroundColor: AppStyles.color.grey,
 
     }
 

@@ -1,4 +1,9 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+import { Configuration } from './Configuration';
+
+const { width, height } = Dimensions.get('window');
+const SCREEN_WIDTH = width < height ? width : height;
+const numColumns = 2;
 
 export const AppStyles = {
   color: {
@@ -36,7 +41,7 @@ export const AppIcon = {
     padding: 10,
   },
   style: {
-    tintColor: 'tomato', 
+    tintColor: 'tomato',
     width: 25,
     height: 25,
   },
@@ -65,42 +70,95 @@ export const HeaderButtonStyle = StyleSheet.create({
     height: 35,
     margin: 6
   }
-});  
+});
 
 
 
 export const ListStyle = StyleSheet.create({
   title: {
-      fontSize: 18,
-      color: AppStyles.color.text,
-      fontFamily: AppStyles.fontName.bold,
+    fontSize: 18,
+    color: AppStyles.color.text,
+    fontFamily: AppStyles.fontName.bold,
   },
   subtitleView: {
-      minHeight: 75,
-      flexDirection: 'row',
-      paddingTop: 5,
-      marginLeft: 10,
+    minHeight: 75,
+    flexDirection: 'row',
+    paddingTop: 5,
+    marginLeft: 10,
   },
   leftSubtitle: {
-      flex:1,
+    flex: 1,
   },
   description: {
-      color: AppStyles.color.text,
-      fontFamily: AppStyles.fontName.main,
-      flex:1,
-      textAlignVertical: 'bottom',  
+    color: AppStyles.color.text,
+    fontFamily: AppStyles.fontName.main,
+    flex: 1,
+    textAlignVertical: 'bottom',
   },
   place: {
 
   },
   price: {
-      fontSize: 18,
-      color: AppStyles.color.text,
-      fontFamily: AppStyles.fontName.bold,   
-      textAlignVertical: 'bottom',     
+    fontSize: 18,
+    color: AppStyles.color.text,
+    fontFamily: AppStyles.fontName.bold,
+    textAlignVertical: 'bottom',
   },
   avatarStyle: {
-      height: 100,
-      width: 100
+    height: 100,
+    width: 100
   }
 });
+
+export const TwoColumnListStyle = {
+  listings: {
+    marginTop: 15,
+    width: '100%',
+    flex: 1,
+  },
+  showAllButtonContainer: {
+    borderWidth: 2,
+    borderRadius: 5,
+    borderColor: AppStyles.color.greenBlue,
+    height: 50,
+    width: '100%',
+  },
+  showAllButtonText: {
+    padding: 10,
+    textAlign: 'center',
+    color: AppStyles.color.greenBlue,
+    fontFamily: AppStyles.fontName.bold,
+    justifyContent: 'center',
+  },
+  listingItemContainer: {
+    justifyContent: 'center',
+    marginBottom: Configuration.home.listing_item.offset,
+    marginRight: Configuration.home.listing_item.offset,
+    width: (SCREEN_WIDTH - Configuration.home.listing_item.offset * 3) / numColumns,
+  },
+  photo: {
+    // position: "absolute",
+  },
+  listingPhoto: {
+    width: (SCREEN_WIDTH - Configuration.home.listing_item.offset * 3) / numColumns,
+    height: Configuration.home.listing_item.height,
+  },
+  savedIcon: {
+    position: "absolute",
+    top: Configuration.home.listing_item.saved.position_top,
+    left: (SCREEN_WIDTH - Configuration.home.listing_item.offset * 3) / numColumns - Configuration.home.listing_item.offset - Configuration.home.listing_item.saved.size,
+    width: Configuration.home.listing_item.saved.size,
+    height: Configuration.home.listing_item.saved.size
+  },
+  listingName: {
+    fontSize: 15,
+    fontFamily: AppStyles.fontName.bold,
+    color: AppStyles.color.text,
+    marginTop: 5,
+  },
+  listingPlace: {
+    fontFamily: AppStyles.fontName.bold,
+    color: AppStyles.color.text,
+    marginTop: 5,
+  },
+}

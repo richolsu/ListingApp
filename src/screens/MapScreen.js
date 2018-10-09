@@ -1,12 +1,11 @@
 import React from 'react';
-import { StyleSheet, Button, Text, View } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
-import HeaderButton from '../components/HeaderButton';
-import { AppStyles, AppIcon } from '../AppStyles';
+import { StyleSheet } from 'react-native';
 import firebase from 'react-native-firebase';
+import MapView, { Marker } from 'react-native-maps';
+import { AppIcon, AppStyles } from '../AppStyles';
+import HeaderButton from '../components/HeaderButton';
+import { Configuration } from '../Configuration';
 
-const LATITUDEDELTA = 0.0422;
-const LONGITUDEDELTA = 0.0221;
 
 class MapScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
@@ -31,10 +30,10 @@ class MapScreen extends React.Component {
             page: 1,
             seed: 1,
             error: null,
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: LATITUDEDELTA,
-            longitudeDelta: LONGITUDEDELTA,
+            latitude: Configuration.map.origin.latitude,
+            longitude: Configuration.map.origin.longitude,
+            latitudeDelta: Configuration.map.delta.latitude,
+            longitudeDelta: Configuration.map.delta.longitude,
             refreshing: false
         };
     }
@@ -113,7 +112,7 @@ const styles = StyleSheet.create({
     mapView: {
         width: '100%',
         height: '100%',
-        backgroundColor: 'green',
+        backgroundColor: AppStyles.color.grey,
 
     }
 })

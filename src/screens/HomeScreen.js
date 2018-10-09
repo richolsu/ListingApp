@@ -3,23 +3,11 @@ import { ScrollView, Dimensions, ActivityIndicator, TouchableOpacity, FlatList, 
 import Button from 'react-native-button';
 import HeaderButton from '../components/HeaderButton';
 import firebase from 'react-native-firebase';
-import { AppStyles, AppIcon } from '../AppStyles';
+import { AppStyles, AppIcon, TwoColumnListStyle } from '../AppStyles';
 import FastImage from 'react-native-fast-image'
 import SavedButton from '../components/SavedButton';
 import { connect } from 'react-redux';
-
-// screen sizing
-const { width, height } = Dimensions.get('window');
-// orientation must fixed
-const SCREEN_WIDTH = width < height ? width : height;
-
-const numColumns = 2;
-const INITIAL_SHOW_COUNT = 2;
-// item size
-const PRODUCT_ITEM_HEIGHT = 130;
-const PRODUCT_ITEM_OFFSET = 15;
-const SAVED_POSTION_TOP = 5;
-const SAVED_ICON_SiZE = 25;
+import { Configuration } from '../Configuration';
 
 class HomeScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
@@ -82,10 +70,10 @@ class HomeScreen extends React.Component {
         });
 
         this.setState({
-            listings: data.slice(0, INITIAL_SHOW_COUNT),
+            listings: data.slice(0, Configuration.home.initial_show_count),
             allListings: data,
             loading: false,
-            showedAll: data.length <= INITIAL_SHOW_COUNT
+            showedAll: data.length <= Configuration.home.initial_show_count
         });
     }
 
@@ -186,11 +174,11 @@ class HomeScreen extends React.Component {
     renderListingItem = ({ item }) => {
         return (
             <TouchableOpacity onPress={() => this.onPressListingItem(item)}>
-                <View style={styles.listingItemContainer}>
-                    <FastImage style={styles.listingPhoto} source={{ uri: item.cover_photo }} />
-                    <SavedButton style={styles.savedIcon} onPress={() => this.onPressSavedIcon(item)} item={item} />
-                    <Text style={styles.listingName}>{item.name}</Text>
-                    <Text style={styles.listingPlace}>{item.place}</Text>
+                <View style={TwoColumnListStyle.listingItemContainer}>
+                    <FastImage style={TwoColumnListStyle.listingPhoto} source={{ uri: item.cover_photo }} />
+                    <SavedButton style={TwoColumnListStyle.savedIcon} onPress={() => this.onPressSavedIcon(item)} item={item} />
+                    <Text style={TwoColumnListStyle.listingName}>{item.name}</Text>
+                    <Text style={TwoColumnListStyle.listingPlace}>{item.place}</Text>
                 </View>
             </TouchableOpacity>
         );
@@ -198,7 +186,7 @@ class HomeScreen extends React.Component {
 
     renderListingFooter = () => {
         return (
-            <Button containerStyle={styles.showAllButtonContainer} style={styles.showAllButtonText} onPress={() => this.onShowAll()}>
+            <Button containerStyle={TwoColumnListStyle.showAllButtonContainer} style={TwoColumnListStyle.showAllButtonText} onPress={() => this.onShowAll()}>
                 Show all({this.state.allListings.length})
             </Button>
         );
@@ -240,7 +228,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
         flex: 1,
-        padding: PRODUCT_ITEM_OFFSET,
+        padding: Configuration.home.listing_item.offset,
     },
     title: {
         fontFamily: AppStyles.fontName.bold,
@@ -268,56 +256,7 @@ const styles = StyleSheet.create({
         color: AppStyles.color.text,
         margin: 10,
     },
-    listings: {
-        marginTop: 15,
-        width: '100%',
-        flex: 1,
-    },
-    showAllButtonContainer: {
-        borderWidth: 2,
-        borderRadius: 5,
-        borderColor: AppStyles.color.greenBlue,
-        height: 50,
-        width: '100%',
-    },
-    showAllButtonText: {
-        padding: 10,
-        textAlign: 'center',
-        color: AppStyles.color.greenBlue,
-        fontFamily: AppStyles.fontName.bold,
-        justifyContent: 'center',
-    },
-    listingItemContainer: {
-        justifyContent: 'center',
-        marginBottom: PRODUCT_ITEM_OFFSET,
-        marginRight: PRODUCT_ITEM_OFFSET,
-        width: (SCREEN_WIDTH - PRODUCT_ITEM_OFFSET * 3) / numColumns,
-    },
-    photo: {
-        // position: "absolute",
-    },
-    listingPhoto: {
-        width: (SCREEN_WIDTH - PRODUCT_ITEM_OFFSET * 3) / numColumns,
-        height: PRODUCT_ITEM_HEIGHT,
-    },
-    savedIcon: {
-        position: "absolute",
-        top: SAVED_POSTION_TOP,
-        left: (SCREEN_WIDTH - PRODUCT_ITEM_OFFSET * 3) / numColumns - SAVED_POSTION_TOP - SAVED_ICON_SiZE,
-        width: SAVED_ICON_SiZE,
-        height: SAVED_ICON_SiZE
-    },
-    listingName: {
-        fontSize: 15,
-        fontFamily: AppStyles.fontName.bold,
-        color: AppStyles.color.text,
-        marginTop: 5,
-    },
-    listingPlace: {
-        fontFamily: AppStyles.fontName.bold,
-        color: AppStyles.color.text,
-        marginTop: 5,
-    },
+    
 });
 
 const mapStateToProps = state => ({
