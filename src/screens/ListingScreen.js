@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, FlatList, Text, Image, View } from 'react-native';
-import { AppStyles, AppIcon } from '../AppStyles';
+import { ListStyle, AppStyles, AppIcon } from '../AppStyles';
 import firebase from 'react-native-firebase';
 import { ListItem } from "react-native-elements";
 import priceFormatter from "../components/CurrencyFormatter";
@@ -74,19 +74,19 @@ class ListingScreen extends React.Component {
         <ListItem
             key={item.id}
             title={item.name}
-            titleStyle={styles.title}
+            titleStyle={ListStyle.title}
             subtitle={
-                <View style={styles.subtitleView}>
-                    <View style={styles.leftSubtitle}>
-                        <Text style={styles.description}>{item.description}</Text>
-                        <Text style={styles.place}>{item.place}</Text>
+                <View style={ListStyle.subtitleView}>
+                    <View style={ListStyle.leftSubtitle}>
+                        <Text style={ListStyle.description}>{item.description}</Text>
+                        <Text style={ListStyle.place}>{item.place}</Text>
                     </View>
-                    <Text style={styles.price}>{priceFormatter(item.price)}</Text>
+                    <Text style={ListStyle.price}>{priceFormatter(item.price)}</Text>
                 </View>
             }
             onPress={() => this.onPress(item)}
-            avatarStyle={styles.avatarStyle}
-            avatarContainerStyle={styles.avatarStyle}
+            avatarStyle={ListStyle.avatarStyle}
+            avatarContainerStyle={ListStyle.avatarStyle}
             avatar={{ uri: item.cover_photo }}
             containerStyle={{ borderBottomWidth: 0 }}
             hideChevron={true}
@@ -107,40 +107,5 @@ class ListingScreen extends React.Component {
     }
 }
 
-const styles = StyleSheet.create({
-    title: {
-        fontSize: 18,
-        color: AppStyles.color.text,
-        fontFamily: AppStyles.fontName.bold,
-    },
-    subtitleView: {
-        minHeight: 75,
-        flexDirection: 'row',
-        paddingTop: 5,
-        marginLeft: 10,
-    },
-    leftSubtitle: {
-        flex:1,
-    },
-    description: {
-        color: AppStyles.color.text,
-        fontFamily: AppStyles.fontName.main,
-        flex:1,
-        textAlignVertical: 'bottom',  
-    },
-    place: {
-
-    },
-    price: {
-        fontSize: 18,
-        color: AppStyles.color.text,
-        fontFamily: AppStyles.fontName.bold,   
-        textAlignVertical: 'bottom',     
-    },
-    avatarStyle: {
-        height: 100,
-        width: 100
-    }
-});
 
 export default ListingScreen;

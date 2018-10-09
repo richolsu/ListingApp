@@ -66,3 +66,41 @@ export const HeaderButtonStyle = StyleSheet.create({
     margin: 6
   }
 });  
+
+
+
+export const ListStyle = StyleSheet.create({
+  title: {
+      fontSize: 18,
+      color: AppStyles.color.text,
+      fontFamily: AppStyles.fontName.bold,
+  },
+  subtitleView: {
+      minHeight: 75,
+      flexDirection: 'row',
+      paddingTop: 5,
+      marginLeft: 10,
+  },
+  leftSubtitle: {
+      flex:1,
+  },
+  description: {
+      color: AppStyles.color.text,
+      fontFamily: AppStyles.fontName.main,
+      flex:1,
+      textAlignVertical: 'bottom',  
+  },
+  place: {
+
+  },
+  price: {
+      fontSize: 18,
+      color: AppStyles.color.text,
+      fontFamily: AppStyles.fontName.bold,   
+      textAlignVertical: 'bottom',     
+  },
+  avatarStyle: {
+      height: 100,
+      width: 100
+  }
+});
