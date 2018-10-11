@@ -7,7 +7,7 @@ class WelcomeScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text>Welcome!</Text>
+                <Text style={styles.title}>Welcome!</Text>
                 <Button containerStyle={styles.loginContainer} style={styles.loginText}
                     onPress={() => this.props.navigation.navigate('Login')}>
                     Log In
@@ -31,6 +31,13 @@ const styles = StyleSheet.create({
     logo: {
         width: 200,
         height: 200,
+    },
+    title: {
+        fontSize: AppStyles.fontSize.title,
+        fontWeight: 'bold',
+        color: AppStyles.color.main,
+        marginTop: 20,
+        marginBottom: 20,
     },
     loginContainer: {
         width: AppStyles.buttonWidth.main,
