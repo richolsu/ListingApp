@@ -29,4 +29,5 @@ React Native App
    pod install
 ```
 10. [node_modules/react-native/third-party/glog-0.3.4/configure](https://github.com/facebook/react-native/issues/14382)
-11. [Removed Airmaps.xcodeproj and libairmaps if it exist in Libraries folder and Build Settings respectively.](https://github.com/react-community/react-native-maps/issues/718)  
+11. [Remove and add again libfishhook.a from Xcode and the path issue will resolve.](https://github.com/facebook/react-native/issues/19569)
+12. [Removed Airmaps.xcodeproj and libairmaps if it exist in Libraries folder and Build Settings respectively.](https://github.com/react-community/react-native-maps/issues/718)  
