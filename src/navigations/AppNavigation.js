@@ -15,7 +15,7 @@ import SavedListingScreen from '../screens/SavedListingScreen';
 import SearchScreen from '../screens/SearchScreen';
 import SignupScreen from '../screens/SignupScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
-import { AppIcon } from '../AppStyles';
+import { AppIcon, AppStyles } from '../AppStyles';
 
 const noTransitionConfig = () => ({
     transitionSpec: {
@@ -58,7 +58,7 @@ const HomeStack = createStackNavigator({
                 textAlign: 'center',
                 flex: 1,
                 alignSelf: 'center',
-                fontFamily: 'FallingSkyCond',
+                fontFamily: AppStyles.fontName.main,
             },
         }),
         cardStyle: { backgroundColor: '#FFFFFF' },
@@ -81,7 +81,7 @@ const CollectionStack = createStackNavigator({
                 textAlign: 'center',
                 alignSelf: 'center',
                 flex: 1,
-                fontFamily: 'FallingSkyCond',
+                fontFamily: AppStyles.fontName.main,
             },
         }),
     }
@@ -102,7 +102,7 @@ const SavedListingStack = createStackNavigator({
                 textAlign: 'center',
                 alignSelf: 'center',
                 flex: 1,
-                fontFamily: 'FallingSkyCond',
+                fontFamily: AppStyles.fontName.main,
             },
         }),
 
@@ -124,7 +124,7 @@ const SearchStack = createStackNavigator({
                 textAlign: 'center',
                 alignSelf: 'center',
                 flex: 1,
-                fontFamily: 'FallingSkyCond',
+                fontFamily: AppStyles.fontName.main,
             },
         }),
     }
