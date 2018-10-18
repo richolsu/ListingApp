@@ -27,8 +27,8 @@ export const AppStyles = {
     main: '80%'
   },
   fontName: {
-    main: 'NotoSans-Regular',
-    bold: 'NotoSans-Bold'
+    main: 'Noto Sans',
+    bold: 'Noto Sans Bold'
   },
   borderRadius: {
     main: 25,
