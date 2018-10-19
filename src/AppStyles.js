@@ -79,7 +79,12 @@ export const HeaderButtonStyle = StyleSheet.create({
     width: 35,
     height: 35,
     margin: 6
-  }
+  },
+  rightButton: {
+    color: AppStyles.color.tint,
+    marginRight: 10,
+    fontFamily: AppStyles.fontName.main,
+  },
 });
 
 
@@ -174,4 +179,38 @@ export const TwoColumnListStyle = {
     color: AppStyles.color.subtitle,
     marginTop: 5,
   },
+}
+
+export const ModalSelectorStyle = {
+  optionTextStyle: {
+    color: AppStyles.color.subtitle,
+    fontSize: 16,
+    fontFamily: AppStyles.fontName.main,
+  },
+  selectedItemTextStyle: {
+    fontSize: 18,
+    color: AppStyles.color.blue,
+    fontFamily: AppStyles.fontName.main,
+    fontWeight: 'bold',
+  },
+  optionContainerStyle: {
+    backgroundColor: AppStyles.color.white
+  },
+  cancelContainerStyle: {
+    backgroundColor: AppStyles.color.white,
+    borderRadius: 10,
+  },
+  sectionTextStyle: {
+    fontSize: 21,
+    color: AppStyles.color.title,
+    fontFamily: AppStyles.fontName.main,
+    fontWeight: 'bold',
+  },
+
+  cancelTextStyle: {
+    fontSize: 21,
+    color: AppStyles.color.blue,
+    fontFamily: AppStyles.fontName.main,
+    fontWeight: 'bold',
+  }
 }

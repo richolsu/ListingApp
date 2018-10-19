@@ -11,6 +11,7 @@ import ListingScreen from '../screens/ListingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import PostScreen from '../screens/PostScreen';
 import MapScreen from '../screens/MapScreen';
+import SelectLocationScreen from '../screens/SelectLocationScreen';
 import SavedListingScreen from '../screens/SavedListingScreen';
 import SearchScreen from '../screens/SearchScreen';
 import SignupScreen from '../screens/SignupScreen';
@@ -48,7 +49,8 @@ const HomeStack = createStackNavigator({
     Listing: { screen: ListingScreen },
     Detail: { screen: DetailScreen },
     Post: { screen: PostScreen },
-    Map: { screen: MapScreen }
+    Map: { screen: MapScreen },
+    SelectLocation: { screen: SelectLocationScreen}
 }, {
         initialRouteName: 'Home',
         headerMode: 'float',

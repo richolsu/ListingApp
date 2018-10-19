@@ -2,7 +2,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import firebase from 'react-native-firebase';
 import ModalSelector from 'react-native-modal-selector';
-import { AppStyles } from '../AppStyles';
+import { AppStyles, ModalSelectorStyle } from '../AppStyles';
 
 const FILTER_SQUARE_FEET = "square_feet";
 const FILTER_BEDROOMS = "bedrooms";
@@ -127,17 +127,17 @@ class FilterScreen extends React.Component {
         ));
         data.unshift({ key: 'section', label: item.name, section: true });
 
-        console.log(data);
+
         return (
             <ModalSelector
                 touchableActiveOpacity={0.9}
                 data={data}
-                sectionTextStyle={styles.sectionTextStyle}
-                optionTextStyle={styles.optionTextStyle}
-                optionContainerStyle={styles.optionContainerStyle}
-                cancelContainerStyle={styles.cancelContainerStyle}
-                cancelTextStyle={styles.cancelTextStyle}
-                selectedItemTextStyle={styles.selectedItemTextStyle}
+                sectionTextStyle={ModalSelectorStyle.sectionTextStyle}
+                optionTextStyle={ModalSelectorStyle.optionTextStyle}
+                optionContainerStyle={ModalSelectorStyle.optionContainerStyle}
+                cancelContainerStyle={ModalSelectorStyle.cancelContainerStyle}
+                cancelTextStyle={ModalSelectorStyle.cancelTextStyle}
+                selectedItemTextStyle={ModalSelectorStyle.selectedItemTextStyle}
                 backdropPressToClose={true}
                 cancelText={'Cancel'}
                 initValue={item.options[0]}
@@ -190,37 +190,7 @@ const styles = StyleSheet.create({
         color: AppStyles.color.description,
         fontFamily: AppStyles.fontName.main,
     },
-    optionTextStyle: {
-        color: AppStyles.color.subtitle,
-        fontSize: 16,
-        fontFamily: AppStyles.fontName.main,
-    },
-    selectedItemTextStyle: {
-        fontSize: 18,
-        color: AppStyles.color.blue,
-        fontFamily: AppStyles.fontName.main,
-        fontWeight: 'bold',
-    },
-    optionContainerStyle: {
-        backgroundColor: AppStyles.color.white
-    },
-    cancelContainerStyle: {
-        backgroundColor: AppStyles.color.white,
-        borderRadius: 10,
-    },
-    sectionTextStyle: {
-        fontSize: 21,
-        color: AppStyles.color.title,
-        fontFamily: AppStyles.fontName.main,
-        fontWeight: 'bold',
-    },
-
-    cancelTextStyle: {
-        fontSize: 21,
-        color: AppStyles.color.blue,
-        fontFamily: AppStyles.fontName.main,
-        fontWeight: 'bold',
-    }
+    
 
 });
 

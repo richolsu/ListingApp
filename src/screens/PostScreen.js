@@ -1,10 +1,11 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Image, Button, TextInput, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Image, TouchableOpacity, TextInput, Text, View } from "react-native";
 import firebase from 'react-native-firebase';
 import ModalSelector from 'react-native-modal-selector';
-import { AppStyles, AppIcon } from '../AppStyles';
+import { AppStyles, AppIcon, ModalSelectorStyle, HeaderButtonStyle } from '../AppStyles';
 import TextButton from 'react-native-button';
 import FastImage from 'react-native-fast-image'
+import { Configuration } from '../Configuration';
 
 const FILTER_SQUARE_FEET = "square_feet";
 const FILTER_BEDROOMS = "bedrooms";
@@ -18,18 +19,29 @@ class PostScreen extends React.Component {
         title: 'Add Listing',
         headerRight: (<TextButton
             onPress={() => { navigation.goBack(null) }}
-            style={styles.cancelButton}
+            style={HeaderButtonStyle.rightButton}
         >Cancel</TextButton>),
     });
 
     constructor(props) {
         super(props);
 
+        this.categoryRef = firebase.firestore().collection('Categories').orderBy('order', 'asc');
+        this.unsubscribeCategory = null;
         this.ref = firebase.firestore().collection('listing_filters');
         this.unsubscribe = null;
 
         this.state = {
             loading: false,
+            categories: [],
+            title: '',
+            description: '',
+            category: {},
+            location: {
+                latitude: Configuration.map.origin.latitude,
+                longitude: Configuration.map.origin.longitude,
+            },
+            price: '',
             data: [],
             page: 1,
             seed: 1,
@@ -79,6 +91,20 @@ class PostScreen extends React.Component {
         return filter_key;
     }
 
+    onCategoryUpdate = (querySnapshot) => {
+        const data = [];
+        querySnapshot.forEach((doc) => {
+            const category = doc.data();
+            data.push({ ...category, id: doc.id });
+        });
+
+        this.setState({
+            categories: data,
+            category: data[0],
+            loading: false,
+        });
+    }
+
     onCollectionUpdate = (querySnapshot) => {
         const data = [];
         querySnapshot.forEach((doc) => {
@@ -98,10 +124,12 @@ class PostScreen extends React.Component {
 
     componentDidMount() {
         this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate)
+        this.unsubscribeCategory = this.categoryRef.onSnapshot(this.onCategoryUpdate)
     }
 
     componentWillUnmount() {
         this.unsubscribe();
+        this.unsubscribeCategory();
     }
 
     renderItem = (item) => {
@@ -149,16 +177,40 @@ class PostScreen extends React.Component {
         );
     }
 
+    handlePriceInputChange = (price) => {
+        let newText = '';
+        let numbers = '0123456789';
+
+        for (var i = 0; i < price.length; i++) {
+            if (numbers.indexOf(price[i]) > -1) {
+                newText = newText + price[i];
+            }
+        }
+
+        this.setState({
+            price: newText
+        });
+    }
+
+    selectLocation = () => {
+        this.props.navigation.navigate('SelectLocation', { location: this.state.location, onSelectLocationDone: this.onSelectLocationDone });
+    }
+
+    onSelectLocationDone = (location) => {
+        this.setState({ location: location });
+    }
+
     render() {
-        selectorArray = this.state.data.map(item => {
-            return this.renderItem(item);
-        })
+        categoryData = this.state.categories.map((category, index) => (
+            { key: category.id, label: category.name }
+        ));
+        categoryData.unshift({ key: 'section', label: 'Category', section: true });
 
         return (
             <ScrollView style={styles.body}>
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Title</Text>
-                    <TextInput style={styles.input} placeholder="Start typing" placeholderTextColor={AppStyles.color.grey} underlineColorAndroid='transparent' />
+                    <TextInput style={styles.input} value={this.state.title} onChangeText={(text) => this.setState({ title: text })} placeholder="Start typing" placeholderTextColor={AppStyles.color.grey} underlineColorAndroid='transparent' />
                 </View>
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Description</Text>
@@ -166,6 +218,8 @@ class PostScreen extends React.Component {
                         multiline={true}
                         numberOfLines={2}
                         style={styles.input}
+                        onChangeText={(text) => this.setState({ description: text })}
+                        value={this.state.description}
                         placeholder="Start typing"
                         placeholderTextColor={AppStyles.color.grey}
                         underlineColorAndroid='transparent' />
@@ -173,20 +227,43 @@ class PostScreen extends React.Component {
                 <View style={styles.section}>
                     <View style={styles.row}>
                         <Text style={styles.title}>Price</Text>
-                        <Text style={styles.value}>Select...</Text>
+                        <TextInput
+                            style={styles.priceInput}
+                            keyboardType='numeric'
+                            value={this.state.price}
+                            onChangeText={this.handlePriceInputChange}
+                            placeholderTextColor={AppStyles.color.grey}
+                            underlineColorAndroid='transparent' />
                     </View>
-                    <View style={styles.row}>
-                        <Text style={styles.title}>Category</Text>
-                        <Text style={styles.value}>Select...</Text>
-                    </View>
+                    <ModalSelector
+                        touchableActiveOpacity={0.9}
+                        data={categoryData}
+                        sectionTextStyle={ModalSelectorStyle.sectionTextStyle}
+                        optionTextStyle={ModalSelectorStyle.optionTextStyle}
+                        optionContainerStyle={ModalSelectorStyle.optionContainerStyle}
+                        cancelContainerStyle={ModalSelectorStyle.cancelContainerStyle}
+                        cancelTextStyle={ModalSelectorStyle.cancelTextStyle}
+                        selectedItemTextStyle={ModalSelectorStyle.selectedItemTextStyle}
+                        backdropPressToClose={true}
+                        cancelText={'Cancel'}
+                        initValue={this.state.category.name}
+                        onChange={(option) => { this.setState({ category: { id: option.key, name: option.label } }) }}>
+                        <View style={styles.row}>
+                            <Text style={styles.title}>Category</Text>
+                            <Text style={styles.value}>{this.state.category.name}</Text>
+                        </View>
+                    </ModalSelector>
+
                     <View style={styles.row}>
                         <Text style={styles.title}>Filters</Text>
                         <Text style={styles.value}>Select...</Text>
                     </View>
-                    <View style={styles.row}>
-                        <Text style={styles.title}>Location</Text>
-                        <Text style={styles.value}>Select...</Text>
-                    </View>
+                    <TouchableOpacity onPress={this.selectLocation}>
+                        <View style={styles.row}>
+                            <Text style={styles.title}>Location</Text>
+                            <Text style={styles.value}>Select...</Text>
+                        </View>
+                    </TouchableOpacity>
                     <Text style={styles.addPhotoTitle}>Add Photos</Text>
                     <ScrollView style={styles.photoList} horizontal={true}>
                         <FastImage style={styles.photo} source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/listingapp-f0f38.appspot.com/o/36438b72-b386-45c7-97f2-51c27bc5c2f4.jpg?alt=media&token=b10376d4-3454-48e5-bb68-506f414da5b4' }} />
@@ -241,6 +318,13 @@ const styles = StyleSheet.create({
         fontFamily: AppStyles.fontName.main,
         color: AppStyles.color.text,
     },
+    priceInput: {
+        flex: 1,
+        textAlign: 'right',
+        paddingRight: 0,
+        fontFamily: AppStyles.fontName.main,
+        color: AppStyles.color.text,
+    },
     title: {
         flex: 1,
         textAlign: 'left',
@@ -255,16 +339,9 @@ const styles = StyleSheet.create({
         color: AppStyles.color.description,
         fontFamily: AppStyles.fontName.main,
     },
-    cancelButton: {
-        color: AppStyles.color.tint,
-        marginRight: 10,
-        fontFamily: AppStyles.fontName.main,
-    },
     section: {
         backgroundColor: 'white',
-        color: 'black',
         marginBottom: 10,
-
     },
     row: {
         height: 50,
@@ -277,13 +354,13 @@ const styles = StyleSheet.create({
         color: AppStyles.color.title,
         fontSize: 25,
         paddingLeft: 20,
-        marginTop:20,
+        marginTop: 20,
         fontFamily: AppStyles.fontName.bold,
         fontWeight: 'bold',
     },
     photoList: {
         height: 80,
-        marginTop:20,
+        marginTop: 20,
         marginRight: 10,
     },
     photo: {
