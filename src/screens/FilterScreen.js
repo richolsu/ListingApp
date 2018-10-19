@@ -132,8 +132,15 @@ class FilterScreen extends React.Component {
             <ModalSelector
                 touchableActiveOpacity={0.9}
                 data={data}
+                sectionTextStyle={styles.sectionTextStyle}
+                optionTextStyle={styles.optionTextStyle}
+                optionContainerStyle={styles.optionContainerStyle}
+                cancelContainerStyle={styles.cancelContainerStyle}
+                cancelTextStyle={styles.cancelTextStyle}
+                selectedItemTextStyle={styles.selectedItemTextStyle}
                 backdropPressToClose={true}
                 cancelText={'Cancel'}
+                initValue={item.options[0]}
                 onChange={(option) => { this.setState({ filter: { ...this.state.filter, [filter_key]: option.key } }) }}>
                 <View style={styles.container}>
                     <Text style={styles.title}>{item.name}</Text>
@@ -176,13 +183,44 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         color: AppStyles.color.filterTitle,
         fontSize: 19,
-        fontFamily: AppStyles.fontName.bold,
+        fontFamily: AppStyles.fontName.main,
     },
     value: {
         textAlign: 'right',
         color: AppStyles.color.description,
-        fontFamily: AppStyles.fontName.bold,
+        fontFamily: AppStyles.fontName.main,
     },
+    optionTextStyle: {
+        color: AppStyles.color.subtitle,
+        fontSize: 16,
+        fontFamily: AppStyles.fontName.main,
+    },
+    selectedItemTextStyle: {
+        fontSize: 18,
+        color: AppStyles.color.blue,
+        fontFamily: AppStyles.fontName.main,
+        fontWeight: 'bold',
+    },
+    optionContainerStyle: {
+        backgroundColor: AppStyles.color.white
+    },
+    cancelContainerStyle: {
+        backgroundColor: AppStyles.color.white,
+        borderRadius: 10,
+    },
+    sectionTextStyle: {
+        fontSize: 21,
+        color: AppStyles.color.title,
+        fontFamily: AppStyles.fontName.main,
+        fontWeight: 'bold',
+    },
+
+    cancelTextStyle: {
+        fontSize: 21,
+        color: AppStyles.color.blue,
+        fontFamily: AppStyles.fontName.main,
+        fontWeight: 'bold',
+    }
 
 });
 

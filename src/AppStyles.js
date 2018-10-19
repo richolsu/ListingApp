@@ -23,6 +23,7 @@ export const AppStyles = {
     greenBlue: '#00aea8',
     placeholder: '#a0a0a0',
     background: '#f2f2f2',
+    blue: '#3293fe',
   },
   fontSize: {
     title: 30,
