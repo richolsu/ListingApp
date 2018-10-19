@@ -3,13 +3,13 @@ import { Animated, Easing, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 import { createReactNavigationReduxMiddleware, reduxifyNavigator } from 'react-navigation-redux-helpers';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import HomeScreen from '../screens/HomeScreen';
 import CategoryScreen from '../screens/CategoryScreen';
 import DetailScreen from '../screens/DetailScreen';
 import FilterScreen from '../screens/FilterScreen';
 import ListingScreen from '../screens/ListingScreen';
 import LoginScreen from '../screens/LoginScreen';
+import PostScreen from '../screens/PostScreen';
 import MapScreen from '../screens/MapScreen';
 import SavedListingScreen from '../screens/SavedListingScreen';
 import SearchScreen from '../screens/SearchScreen';
@@ -47,6 +47,7 @@ const HomeStack = createStackNavigator({
     Filter: { screen: FilterScreen },
     Listing: { screen: ListingScreen },
     Detail: { screen: DetailScreen },
+    Post: { screen: PostScreen },
     Map: { screen: MapScreen }
 }, {
         initialRouteName: 'Home',
@@ -157,11 +158,11 @@ const TabNavigator = createBottomTabNavigator(
                 
                 // You can return any component that you like here! We usually use an
                 // icon component from react-native-vector-icons
-                return <Image tintColor={focused?'tomato':'gray'} source={iconName}/>;
+                return <Image tintColor={focused?AppStyles.color.tint:AppStyles.color.grey} source={iconName}/>;
             },
         }),
         tabBarOptions: {
-            activeTintColor: 'tomato',
+            activeTintColor: AppStyles.color.tint,
             inactiveTintColor: 'gray',
         },
     }

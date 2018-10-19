@@ -136,14 +136,15 @@ const styles = StyleSheet.create({
     },
     title: {
         fontFamily: AppStyles.fontName.bold,
-        color: AppStyles.color.text,
+        fontWeight: 'bold',
+        color: AppStyles.color.title,
         fontSize: 25,
         padding: 10,
     },
     description: {
         fontFamily: AppStyles.fontName.bold,
         padding: 10,
-        color: AppStyles.color.text,
+        color: AppStyles.color.description,
     },
     photoItem: {
         backgroundColor: 'green',

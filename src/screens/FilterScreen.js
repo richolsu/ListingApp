@@ -174,13 +174,13 @@ const styles = StyleSheet.create({
         flex: 2,
         textAlign: 'left',
         alignItems: 'center',
-        color: AppStyles.color.grey,
+        color: AppStyles.color.filterTitle,
         fontSize: 19,
         fontFamily: AppStyles.fontName.bold,
     },
     value: {
         textAlign: 'right',
-        color: AppStyles.color.grey,
+        color: AppStyles.color.description,
         fontFamily: AppStyles.fontName.bold,
     },
 

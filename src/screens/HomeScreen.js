@@ -13,7 +13,7 @@ class HomeScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         title: 'Home',
         headerRight: <HeaderButton icon={AppIcon.images.filter} onPress={() => { navigation.navigate('Filter') }} />,
-        headerLeft: <HeaderButton icon={AppIcon.images.map} onPress={() => { navigation.dispatch({ type: 'Logout' }) }} />,
+        headerLeft: <HeaderButton icon={AppIcon.images.map} onPress={() => { navigation.navigate('Post') }} />,
     });
 
     constructor(props) {
@@ -232,11 +232,13 @@ const styles = StyleSheet.create({
     },
     title: {
         fontFamily: AppStyles.fontName.bold,
-        color: AppStyles.color.text,
+        fontWeight: 'bold',
+        color: AppStyles.color.title,
         fontSize: 25,
     },
     listingTitle: {
         marginTop: 10,
+        marginBottom: 10,
     },
     categories: {
         marginTop: 7,
@@ -253,7 +255,8 @@ const styles = StyleSheet.create({
     },
     categoryItemTitle: {
         fontFamily: AppStyles.fontName.bold,
-        color: AppStyles.color.text,
+        fontWeight: 'bold',
+        color: AppStyles.color.categoryTitle,
         margin: 10,
     },
     

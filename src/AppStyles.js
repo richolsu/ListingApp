@@ -8,12 +8,21 @@ const numColumns = 2;
 export const AppStyles = {
   color: {
     main: '#5ea23a',
-    text: '#555555',
+    text: '#696969',
+    title: '#464646',
+    subtitle: '#545454',
+    categoryTitle: '#161616',
+    tint: '#ff364d',
+    description: '#bbbbbb',
+    filterTitle: '#8a8a8a',
+    starRating: '#2bdf85',
+    location: '#a9a9a9',
     white: 'white',
     facebook: '#4267b2',
     grey: 'grey',
     greenBlue: '#00aea8',
-    placeholder: '#a0a0a0'
+    placeholder: '#a0a0a0',
+    background: '#f2f2f2',
   },
   fontSize: {
     title: 30,
@@ -28,7 +37,7 @@ export const AppStyles = {
   },
   fontName: {
     main: 'Noto Sans',
-    bold: 'Noto Sans'
+    bold: 'Noto Sans Bold'
   },
   borderRadius: {
     main: 25,
@@ -41,7 +50,7 @@ export const AppIcon = {
     padding: 10,
   },
   style: {
-    tintColor: 'tomato',
+    tintColor: AppStyles.color.tint,
     width: 25,
     height: 25,
   },
@@ -77,8 +86,9 @@ export const HeaderButtonStyle = StyleSheet.create({
 export const ListStyle = StyleSheet.create({
   title: {
     fontSize: 18,
-    color: AppStyles.color.text,
+    color: AppStyles.color.subtitle,
     fontFamily: AppStyles.fontName.bold,
+    fontWeight: 'bold',
   },
   subtitleView: {
     minHeight: 75,
@@ -90,17 +100,17 @@ export const ListStyle = StyleSheet.create({
     flex: 1,
   },
   description: {
-    color: AppStyles.color.text,
+    color: AppStyles.color.description,
     fontFamily: AppStyles.fontName.main,
     flex: 1,
     textAlignVertical: 'bottom',
   },
   place: {
-
+    color: AppStyles.color.location,
   },
   price: {
     fontSize: 18,
-    color: AppStyles.color.text,
+    color: AppStyles.color.subtitle,
     fontFamily: AppStyles.fontName.bold,
     textAlignVertical: 'bottom',
   },
@@ -154,12 +164,13 @@ export const TwoColumnListStyle = {
     fontSize: 15,
     minHeight: 40,
     fontFamily: AppStyles.fontName.bold,
-    color: AppStyles.color.text,
+    fontWeight: 'bold',
+    color: AppStyles.color.categoryTitle,
     marginTop: 5,
   },
   listingPlace: {
     fontFamily: AppStyles.fontName.bold,
-    color: AppStyles.color.text,
+    color: AppStyles.color.subtitle,
     marginTop: 5,
   },
 }
