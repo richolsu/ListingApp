@@ -173,7 +173,6 @@ const styles = StyleSheet.create({
     title: {
         flex: 2,
         textAlign: 'left',
-        backgroundColor: 'red',
         alignItems: 'center',
         color: AppStyles.color.grey,
         fontSize: 19,
@@ -181,7 +180,6 @@ const styles = StyleSheet.create({
     },
     value: {
         textAlign: 'right',
-        backgroundColor: 'green',
         color: AppStyles.color.grey,
         fontFamily: AppStyles.fontName.bold,
     },
