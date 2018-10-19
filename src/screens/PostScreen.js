@@ -6,6 +6,7 @@ import { AppStyles, AppIcon, ModalSelectorStyle, HeaderButtonStyle } from '../Ap
 import TextButton from 'react-native-button';
 import FastImage from 'react-native-fast-image'
 import { Configuration } from '../Configuration';
+import { connect } from 'react-redux';
 
 class PostScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
@@ -90,6 +91,45 @@ class PostScreen extends React.Component {
         this.setState(filter);
     }
 
+    onPost = () => {
+        const navigation = this.props.navigation;
+        if (!this.state.title) {
+            alert("title empty");
+            return;
+        }
+        if (!this.state.description) {
+            alert("description empty");
+            return;
+        }
+        if (!this.state.price) {
+            alert("price empty");
+            return;
+        }
+        firebase.firestore().collection('Listings').add({
+            user_id: this.props.user.id,
+            category_id: this.state.category.id,
+            description: this.state.description,
+            latitude: this.state.location.latitude,
+            longitude: this.state.location.longitude,
+            mapping: this.state.filter,
+            name: this.state.title,
+            price: this.state.price,
+            coordinate: new firebase.firestore.GeoPoint(this.state.location.latitude, this.state.location.longitude),
+            post_time: firebase.firestore.FieldValue.serverTimestamp(),
+            //TODO:
+            place: 'San Francisco, CA',
+            cover_photo: 'https://firebasestorage.googleapis.com/v0/b/listingapp-f0f38.appspot.com/o/ae164630-6258-462d-a305-811240041b79.jpg?alt=media&token=57cde397-bc11-45a3-854a-993ff72a88d0',
+            list_of_photos: [
+                'https://firebasestorage.googleapis.com/v0/b/listingapp-f0f38.appspot.com/o/6019c353-53b4-423e-8fca-7b5c95c4d703.jpg?alt=media&token=5c1b3a85-fc21-44e8-9642-fdfb5f1508f6',
+                'https://firebasestorage.googleapis.com/v0/b/listingapp-f0f38.appspot.com/o/a5e1e7f9-6397-427f-a86c-4db46d1e9b4e.jpg?alt=media&token=cadcaf28-5be4-4b13-b0ff-f5475238b0b9',
+                'https://firebasestorage.googleapis.com/v0/b/listingapp-f0f38.appspot.com/o/a8d4f875-d5b5-4d82-a0a6-e8368f02cc4b.jpg?alt=media&token=4f5d6ba9-a37d-4f19-af65-7006cff73134',
+            ]
+        }).then(function (docRef) {
+            navigation.goBack();
+        }).catch(function (error) {
+            alert(error);
+        });
+    }
     render() {
         categoryData = this.state.categories.map((category, index) => (
             { key: category.id, label: category.name }
@@ -163,7 +203,7 @@ class PostScreen extends React.Component {
                             <Image style={styles.photoIcon} source={AppIcon.images.heartFilled} />
                         </View>
                     </ScrollView>
-                    <TextButton containerStyle={styles.addButtonContainer} style={styles.addButtonText}>Post Listing</TextButton>
+                    <TextButton containerStyle={styles.addButtonContainer} onPress={this.onPost} style={styles.addButtonText}>Post Listing</TextButton>
 
                 </View>
             </ScrollView>
@@ -283,4 +323,8 @@ const styles = StyleSheet.create({
 
 });
 
-export default PostScreen;
+const mapStateToProps = state => ({
+    user: state.auth.user,
+});
+
+export default connect(mapStateToProps)(PostScreen);
