@@ -1,9 +1,8 @@
 import React from 'react';
-import { ScrollView, Picker, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { AppStyles } from '../AppStyles';
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import firebase from 'react-native-firebase';
-import { ListItem } from "react-native-elements";
-import Modal from "react-native-modal";
+import ModalSelector from 'react-native-modal-selector';
+import { AppStyles } from '../AppStyles';
 
 const FILTER_SQUARE_FEET = "square_feet";
 const FILTER_BEDROOMS = "bedrooms";
@@ -28,6 +27,7 @@ class FilterScreen extends React.Component {
             data: [],
             page: 1,
             seed: 1,
+            textInputValue: '',
             error: null,
             refreshing: false,
             language: 'java',
@@ -122,34 +122,35 @@ class FilterScreen extends React.Component {
                 break;
         };
 
-        pickerItemArr = item.options.map((option, index) => (
-            <Picker.Item label={option} value={option} />
+        data = item.options.map((option, index) => (
+            { key: option, label: option }
         ));
+        data.unshift({ key: 'section', label: item.name, section: true });
 
+        console.log(data);
         return (
-            <View style={styles.container}>
-                <Text style={styles.title}>{item.name}</Text>
-                <Picker
-                    selectedValue={selectedValue}
-                    style={styles.picker}
-                    onValueChange={(itemValue, itemIndex) => {
-                        this.setState({ filter: { ...this.state.filter, [filter_key]: itemValue } });
-                    }}
-                >
-                    {pickerItemArr}
-                </Picker>
-            </View>
+            <ModalSelector
+                touchableActiveOpacity={0.9}
+                data={data}
+                backdropPressToClose={true}
+                cancelText={'Cancel'}
+                onChange={(option) => { this.setState({ filter: { ...this.state.filter, [filter_key]: option.key } }) }}>
+                <View style={styles.container}>
+                    <Text style={styles.title}>{item.name}</Text>
+                    <Text style={styles.value}>{selectedValue}</Text>
+                </View>
+            </ModalSelector>
         );
     }
 
     render() {
-        pickerArray = this.state.data.map(item => {
+        selectorArray = this.state.data.map(item => {
             return this.renderItem(item);
         })
 
         return (
-            <ScrollView style={styles.body}>                
-                {pickerArray}
+            <ScrollView style={styles.body}>
+                {selectorArray}
             </ScrollView>
         );
     }
@@ -170,23 +171,21 @@ const styles = StyleSheet.create({
     },
     title: {
         flex: 2,
-        textAlignVertical: 'center', 
+        textAlignVertical: 'center',
         textAlign: 'left',
-        alignItems: 'center' ,
+        alignItems: 'center',
         color: AppStyles.color.grey,
         fontSize: 19,
         fontFamily: AppStyles.fontName.bold,
     },
-    picker: {
-        textAlign:'right',
-        flex: 1,
-        justifyContent: 'space-between',
+    value: {
+        textAlignVertical: 'center',
+        textAlign: 'right',
         height: '100%',
-        borderBottomColor: 'red',
-        backgroundColor: 'transparent',
         color: AppStyles.color.grey,
         fontFamily: AppStyles.fontName.bold,
     },
+
 });
 
 export default FilterScreen;
