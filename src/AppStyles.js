@@ -38,7 +38,7 @@ export const AppStyles = {
   },
   fontName: {
     main: 'Noto Sans',
-    bold: 'Noto Sans Bold'
+    bold: 'Noto Sans'
   },
   borderRadius: {
     main: 25,
