@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import FastImage from 'react-native-fast-image'
 import SavedButton from '../components/SavedButton';
 import { Configuration } from '../Configuration';
+import StarRating from 'react-native-star-rating';
 
 class SavedListingScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
@@ -31,7 +32,7 @@ class SavedListingScreen extends React.Component {
             const listing = doc.data();
             if (this.state.savedListings.findIndex(k => k == doc.id) >= 0) {
                 listing.saved = true;
-                data.push({ ...listing, id: doc.id });
+                data.push({ ...listing, id: doc.id, starCount:3 });
             }
 
         });
@@ -59,7 +60,7 @@ class SavedListingScreen extends React.Component {
             loading: false,
         });
     }
-    
+
     onPressListingItem = (item) => {
         this.props.navigation.navigate('Detail', { item: item });
     }
@@ -103,6 +104,14 @@ class SavedListingScreen extends React.Component {
                     <SavedButton style={TwoColumnListStyle.savedIcon} onPress={() => this.onPressSavedIcon(item)} item={item} />
                     <Text style={TwoColumnListStyle.listingName}>{item.name}</Text>
                     <Text style={TwoColumnListStyle.listingPlace}>{item.place}</Text>
+                    <StarRating containerStyle={styles.starRatingContainer}
+                        disabled={false}
+                        maxStars={5}
+                        starSize={15}
+                        disabled={true}
+                        fullStarColor={'green'}
+                        rating={item.starCount}
+                    />
                 </View>
             </TouchableOpacity>
         );
@@ -129,6 +138,10 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: Configuration.home.listing_item.offset,
     },
+    starRatingContainer: {
+        width: 90,         
+        marginTop: 10
+    }
 })
 
 const mapStateToProps = state => ({

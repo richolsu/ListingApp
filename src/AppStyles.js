@@ -132,7 +132,7 @@ export const TwoColumnListStyle = {
   },
   listingItemContainer: {
     justifyContent: 'center',
-    marginBottom: Configuration.home.listing_item.offset,
+    marginBottom: 30,
     marginRight: Configuration.home.listing_item.offset,
     width: (SCREEN_WIDTH - Configuration.home.listing_item.offset * 3) / numColumns,
   },
@@ -152,6 +152,7 @@ export const TwoColumnListStyle = {
   },
   listingName: {
     fontSize: 15,
+    minHeight: 40,
     fontFamily: AppStyles.fontName.bold,
     color: AppStyles.color.text,
     marginTop: 5,
