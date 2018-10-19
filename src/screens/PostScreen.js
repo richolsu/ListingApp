@@ -7,13 +7,6 @@ import TextButton from 'react-native-button';
 import FastImage from 'react-native-fast-image'
 import { Configuration } from '../Configuration';
 
-const FILTER_SQUARE_FEET = "square_feet";
-const FILTER_BEDROOMS = "bedrooms";
-const FILTER_PRICE_RANGE = "price_range";
-const FILTER_BUY_OR_RENT = "buy_or_rent";
-const FILTER_YEAR_BUILT = "year_built";
-const FILTER_NEW_ONLY = "new_only";
-
 class PostScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         title: 'Add Listing',
@@ -86,11 +79,15 @@ class PostScreen extends React.Component {
     }
 
     selectFilter = () => {
-        this.props.navigation.navigate('Filter', { filter: this.state.filter });
+        this.props.navigation.navigate('Filter', { filter: this.state.filter, onSelectFilterDone: this.onSelectFilterDone });
     }
 
     onSelectLocationDone = (location) => {
         this.setState({ location: location });
+    }
+
+    onSelectFilterDone = (filter) => {
+        this.setState(filter);
     }
 
     render() {

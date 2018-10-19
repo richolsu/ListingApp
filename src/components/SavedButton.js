@@ -10,7 +10,7 @@ export default class SavedButton extends React.Component {
     const { item, style } = this.props
     return (
       <TouchableOpacity style={style} onPress={this.props.onPress}>
-        <Image style={AppIcon.style} tintColor={item.saved ? AppStyles.color.tint : AppStyles.color.white} source={AppIcon.images.heartFilled} />
+        <Image style={{...AppIcon.style, tintColor:item.saved ? AppStyles.color.tint : AppStyles.color.white}} source={AppIcon.images.heartFilled} />
       </TouchableOpacity>
     );
   }

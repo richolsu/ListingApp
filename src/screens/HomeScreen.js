@@ -12,7 +12,7 @@ import { Configuration } from '../Configuration';
 class HomeScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         title: 'Home',
-        headerRight: <HeaderButton icon={AppIcon.images.filter} onPress={() => { navigation.navigate('Filter') }} />,
+        headerRight: <HeaderButton icon={AppIcon.images.filter} onPress={() => {navigation.state.params.onPressFilter()} } />,
         headerLeft: <HeaderButton icon={AppIcon.images.map} onPress={() => { navigation.navigate('Post') }} />,
     });
 
@@ -38,6 +38,7 @@ class HomeScreen extends React.Component {
             savedListings: [],
             loading: false,
             error: null,
+            filter: {},
             showedAll: false,
             refreshing: false
         };
@@ -105,6 +106,10 @@ class HomeScreen extends React.Component {
         this.categoriesUnsubscribe = this.categoriesRef.onSnapshot(this.onCategoriesCollectionUpdate);
         this.listingsUnsubscribe = this.listingsRef.onSnapshot(this.onListingsCollectionUpdate);
         this.savedListingsUnsubscribe = this.savedListingsRef.onSnapshot(this.onSavedListingsCollectionUpdate);
+
+        this.props.navigation.setParams({
+            onPressFilter: this.onPressFilter
+        });
     }
 
     componentWillUnmount() {
@@ -123,6 +128,14 @@ class HomeScreen extends React.Component {
         this.props.navigation.navigate('Detail', { item: item });
     }
 
+    onSelectFilterDone = (filter) => {
+        console.log(filter);
+        this.setState(filter);
+    }
+
+    onPressFilter = () => {
+        this.props.navigation.navigate('Filter', { filter: this.state.filter, onSelectFilterDone: this.onSelectFilterDone });
+    }
     onShowAll = () => {
         this.setState({
             showedAll: true,

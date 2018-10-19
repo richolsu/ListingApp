@@ -2,18 +2,17 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import firebase from 'react-native-firebase';
 import ModalSelector from 'react-native-modal-selector';
-import { AppStyles, ModalSelectorStyle } from '../AppStyles';
-
-const FILTER_SQUARE_FEET = "square_feet";
-const FILTER_BEDROOMS = "bedrooms";
-const FILTER_PRICE_RANGE = "price_range";
-const FILTER_BUY_OR_RENT = "buy_or_rent";
-const FILTER_YEAR_BUILT = "year_built";
-const FILTER_NEW_ONLY = "new_only";
+import { AppStyles, ModalSelectorStyle, HeaderButtonStyle } from '../AppStyles';
+import TextButton from 'react-native-button';
 
 class FilterScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         title: 'Filters',
+        headerRight: (
+            <TextButton
+                onPress={navigation.state.params.onDone}
+                style={HeaderButtonStyle.rightButton}
+            >Done</TextButton>),
     });
 
     constructor(props) {
@@ -21,7 +20,7 @@ class FilterScreen extends React.Component {
 
         this.ref = firebase.firestore().collection('listing_filters');
         this.unsubscribe = null;
-
+        console.log(props.navigation.state.params);
         this.state = {
             loading: false,
             data: [],
@@ -31,46 +30,10 @@ class FilterScreen extends React.Component {
             error: null,
             refreshing: false,
             language: 'java',
-            filter: {
-                FILTER_SQUARE_FEET: null,
-                FILTER_BEDROOMS: null,
-                FILTER_PRICE_RANGE: null,
-                FILTER_BUY_OR_RENT: null,
-                FILTER_YEAR_BUILT: null,
-                FILTER_NEW_ONLY: null,
-            },
+            filter: props.navigation.state.params.filter,
             isModalVisible: false
         };
-    }
-
-    _toggleModal = () =>
-        this.setState({ isModalVisible: !this.state.isModalVisible });
-
-    getFilterKey = (filter) => {
-        let filter_key = "no_key";
-        switch (filter.name) {
-            case "Square feet":
-                filter_key = FILTER_SQUARE_FEET;
-                break;
-            case "Bedrooms":
-                filter_key = FILTER_BEDROOMS;
-                break;
-            case "Price Range":
-                filter_key = FILTER_PRICE_RANGE;
-                break;
-            case "Buy or Rent":
-                filter_key = FILTER_BUY_OR_RENT;
-                break;
-            case "Year Built":
-                filter_key = FILTER_YEAR_BUILT;
-                break;
-            case "New Construction Only":
-                filter_key = FILTER_NEW_ONLY;
-                break;
-
-        };
-
-        return filter_key;
+        console.log(this.state.filter);
     }
 
     onCollectionUpdate = (querySnapshot) => {
@@ -78,49 +41,38 @@ class FilterScreen extends React.Component {
         querySnapshot.forEach((doc) => {
             const filter = doc.data();
             data.push({ ...filter, id: doc.id });
-
-            this.setState({
-                filter: { ...this.state.filter, [this.getFilterKey(filter)]: filter.options[0] }
-            });
+            if (!this.state.filter[filter.name]) {
+                this.setState({
+                    filter: { ...this.state.filter, [filter.name]: filter.options[0] }
+                });
+            }
         });
 
         this.setState({
             data,
-            loading: false,
         });
     }
 
     componentDidMount() {
-        this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate)
+        this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
+        this.props.navigation.setParams({
+            onDone: this.onDone
+        });
     }
 
     componentWillUnmount() {
         this.unsubscribe();
     }
 
+    onDone = () => {
+        console.log(this.state.filter);
+        this.props.navigation.state.params.onSelectFilterDone({ filter: this.state.filter })
+        this.props.navigation.goBack();
+    }
+
+
     renderItem = (item) => {
-        let filter_key = this.getFilterKey(item);
-        let selectedValue = this.state.filter.FILTER_SQUARE_FEET;
-        switch (filter_key) {
-            case FILTER_SQUARE_FEET:
-                selectedValue = this.state.filter.square_feet;
-                break;
-            case FILTER_BEDROOMS:
-                selectedValue = this.state.filter.bedrooms;
-                break;
-            case FILTER_PRICE_RANGE:
-                selectedValue = this.state.filter.price_range;
-                break;
-            case FILTER_BUY_OR_RENT:
-                selectedValue = this.state.filter.buy_or_rent;
-                break;
-            case FILTER_YEAR_BUILT:
-                selectedValue = this.state.filter.year_built;
-                break;
-            case FILTER_NEW_ONLY:
-                selectedValue = this.state.filter.new_only;
-                break;
-        };
+        let filter_key = item.name;
 
         data = item.options.map((option, index) => (
             { key: option, label: option }
@@ -144,7 +96,7 @@ class FilterScreen extends React.Component {
                 onChange={(option) => { this.setState({ filter: { ...this.state.filter, [filter_key]: option.key } }) }}>
                 <View style={styles.container}>
                     <Text style={styles.title}>{item.name}</Text>
-                    <Text style={styles.value}>{selectedValue}</Text>
+                    <Text style={styles.value}>{this.state.filter[filter_key]}</Text>
                 </View>
             </ModalSelector>
         );
@@ -190,7 +142,7 @@ const styles = StyleSheet.create({
         color: AppStyles.color.description,
         fontFamily: AppStyles.fontName.main,
     },
-    
+
 
 });
 
