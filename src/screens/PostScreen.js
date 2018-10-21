@@ -168,7 +168,7 @@ class PostScreen extends React.Component {
                 longitude: this.state.location.longitude,
                 mapping: this.state.filter,
                 name: this.state.title,
-                price: this.state.price,
+                price: parseInt(this.state.price),
                 coordinate: new firebase.firestore.GeoPoint(this.state.location.latitude, this.state.location.longitude),
                 post_time: firebase.firestore.FieldValue.serverTimestamp(),
                 //TODO:
