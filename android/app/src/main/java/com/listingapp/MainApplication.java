@@ -14,6 +14,7 @@ import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
+import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 import java.util.Arrays;
 import java.util.List;
 import android.support.multidex.MultiDexApplication;
@@ -36,7 +37,8 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
             new VectorIconsPackage(),
           new RNFirebasePackage(),
           new RNFirebaseAuthPackage(),
-          new RNFirebaseFirestorePackage()
+          new RNFirebaseFirestorePackage(),
+          new RNFirebaseStoragePackage()
       );
     }
 

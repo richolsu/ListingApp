@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Image, TouchableOpacity, TextInput, Text, View } from "react-native";
+import { ScrollView, Platform, StyleSheet, Image, TouchableOpacity, TextInput, Text, View } from "react-native";
 import firebase from 'react-native-firebase';
 import ModalSelector from 'react-native-modal-selector';
 import { AppStyles, AppIcon, ModalSelectorStyle, HeaderButtonStyle } from '../AppStyles';
@@ -28,14 +28,15 @@ class PostScreen extends React.Component {
 
         this.state = {
             categories: [],
-            title: '',
-            description: '',
+            title: 'Test title',
+            description: 'Test Description',
             category: {},
             location: {
                 latitude: Configuration.map.origin.latitude,
                 longitude: Configuration.map.origin.longitude,
             },
             localPhotos: [],
+            photoUrls: [],
             price: '1000',
             textInputValue: '',
             filter: {},
@@ -98,8 +99,7 @@ class PostScreen extends React.Component {
     onPressAddPhotoBtn = () => {
         // More info on all the options is below in the API Reference... just some common use cases shown here
         const options = {
-            title: 'Select Avatar',
-            customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
+            title: 'Select a photo',
             storageOptions: {
                 skipBackup: true,
                 path: 'images',
@@ -111,8 +111,6 @@ class PostScreen extends React.Component {
          * The second arg is the callback which sends object: response (more info in the API Reference)
          */
         ImagePicker.showImagePicker(options, (response) => {
-            console.log('Response = ', response);
-
             if (response.didCancel) {
                 console.log('User cancelled image picker');
             } else if (response.error) {
@@ -140,30 +138,52 @@ class PostScreen extends React.Component {
             alert("price empty");
             return;
         }
-        firebase.firestore().collection('Listings').add({
-            user_id: this.props.user.id,
-            category_id: this.state.category.id,
-            description: this.state.description,
-            latitude: this.state.location.latitude,
-            longitude: this.state.location.longitude,
-            mapping: this.state.filter,
-            name: this.state.title,
-            price: this.state.price,
-            coordinate: new firebase.firestore.GeoPoint(this.state.location.latitude, this.state.location.longitude),
-            post_time: firebase.firestore.FieldValue.serverTimestamp(),
-            //TODO:
-            place: 'San Francisco, CA',
-            cover_photo: 'https://firebasestorage.googleapis.com/v0/b/listingapp-f0f38.appspot.com/o/ae164630-6258-462d-a305-811240041b79.jpg?alt=media&token=57cde397-bc11-45a3-854a-993ff72a88d0',
-            list_of_photos: [
-                'https://firebasestorage.googleapis.com/v0/b/listingapp-f0f38.appspot.com/o/6019c353-53b4-423e-8fca-7b5c95c4d703.jpg?alt=media&token=5c1b3a85-fc21-44e8-9642-fdfb5f1508f6',
-                'https://firebasestorage.googleapis.com/v0/b/listingapp-f0f38.appspot.com/o/a5e1e7f9-6397-427f-a86c-4db46d1e9b4e.jpg?alt=media&token=cadcaf28-5be4-4b13-b0ff-f5475238b0b9',
-                'https://firebasestorage.googleapis.com/v0/b/listingapp-f0f38.appspot.com/o/a8d4f875-d5b5-4d82-a0a6-e8368f02cc4b.jpg?alt=media&token=4f5d6ba9-a37d-4f19-af65-7006cff73134',
-            ]
-        }).then(function (docRef) {
-            navigation.goBack();
-        }).catch(function (error) {
-            alert(error);
+        if (this.state.localPhotos.length==0) {
+            alert("Please pick photos");
+            return;
+        }
+
+        let photoUrls = [];
+
+        uploadPromiseArray = [];
+        this.state.localPhotos.forEach((uri) => {
+            uploadPromiseArray.push(new Promise((resolve, reject) => {
+                console.log("upload image")
+                let filename = uri.substring(uri.lastIndexOf('/') + 1);
+                const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
+                firebase.storage().ref(filename).putFile(uploadUri).then(function (snapshot) {
+                    photoUrls.push(snapshot.downloadURL);
+                    resolve();
+                });
+            }));
         });
+
+        Promise.all(uploadPromiseArray).then(values => {
+            console.log("Post listing");
+            firebase.firestore().collection('Listings').add({
+                user_id: this.props.user.id,
+                category_id: this.state.category.id,
+                description: this.state.description,
+                latitude: this.state.location.latitude,
+                longitude: this.state.location.longitude,
+                mapping: this.state.filter,
+                name: this.state.title,
+                price: this.state.price,
+                coordinate: new firebase.firestore.GeoPoint(this.state.location.latitude, this.state.location.longitude),
+                post_time: firebase.firestore.FieldValue.serverTimestamp(),
+                //TODO:
+                place: 'San Francisco, CA',
+                cover_photo: photoUrls[0],
+                list_of_photos: photoUrls,
+            }).then(function (docRef) {
+                navigation.goBack();
+            }).catch(function (error) {
+                alert(error);
+            });
+        }).catch(reason=> {
+            console.log(reason);
+        });
+
     }
     render() {
         categoryData = this.state.categories.map((category, index) => (
