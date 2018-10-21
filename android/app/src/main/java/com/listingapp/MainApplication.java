@@ -3,6 +3,7 @@ package com.listingapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.imagepicker.ImagePickerPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -29,6 +30,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ImagePickerPackage(),
             new MapsPackage(),
             new FastImageViewPackage(),
             new VectorIconsPackage(),

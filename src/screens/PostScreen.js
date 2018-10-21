@@ -7,6 +7,9 @@ import TextButton from 'react-native-button';
 import FastImage from 'react-native-fast-image'
 import { Configuration } from '../Configuration';
 import { connect } from 'react-redux';
+import ImagePicker from 'react-native-image-picker';
+
+
 
 class PostScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
@@ -32,11 +35,13 @@ class PostScreen extends React.Component {
                 latitude: Configuration.map.origin.latitude,
                 longitude: Configuration.map.origin.longitude,
             },
+            localPhotos: [],
             price: '1000',
             textInputValue: '',
             filter: {},
         };
     }
+
 
     onCategoryUpdate = (querySnapshot) => {
         const data = [];
@@ -90,7 +95,37 @@ class PostScreen extends React.Component {
     onSelectFilterDone = (filter) => {
         this.setState(filter);
     }
+    onPressAddPhotoBtn = () => {
+        // More info on all the options is below in the API Reference... just some common use cases shown here
+        const options = {
+            title: 'Select Avatar',
+            customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
 
+        /**
+         * The first arg is the options object for customization (it can also be null or omitted for default options),
+         * The second arg is the callback which sends object: response (more info in the API Reference)
+         */
+        ImagePicker.showImagePicker(options, (response) => {
+            console.log('Response = ', response);
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            } else {
+                this.setState({
+                    localPhotos: [...this.state.localPhotos, response.uri],
+                });
+            }
+        });
+    }
     onPost = () => {
         const navigation = this.props.navigation;
         if (!this.state.title) {
@@ -136,6 +171,9 @@ class PostScreen extends React.Component {
         ));
         categoryData.unshift({ key: 'section', label: 'Category', section: true });
 
+        photos = this.state.localPhotos.map((photo, index) => (
+            <FastImage style={styles.photo} source={{ uri: photo }} />
+        ));
         return (
             <ScrollView style={styles.body}>
                 <View style={styles.section}>
@@ -197,11 +235,12 @@ class PostScreen extends React.Component {
                     </TouchableOpacity>
                     <Text style={styles.addPhotoTitle}>Add Photos</Text>
                     <ScrollView style={styles.photoList} horizontal={true}>
-                        <FastImage style={styles.photo} source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/listingapp-f0f38.appspot.com/o/36438b72-b386-45c7-97f2-51c27bc5c2f4.jpg?alt=media&token=b10376d4-3454-48e5-bb68-506f414da5b4' }} />
-                        <FastImage style={styles.photo} source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/listingapp-f0f38.appspot.com/o/36438b72-b386-45c7-97f2-51c27bc5c2f4.jpg?alt=media&token=b10376d4-3454-48e5-bb68-506f414da5b4' }} />
-                        <View style={[styles.addButton, styles.photo]}>
-                            <Image style={styles.photoIcon} source={AppIcon.images.heartFilled} />
-                        </View>
+                        {photos}
+                        <TouchableOpacity onPress={this.onPressAddPhotoBtn.bind(this)}>
+                            <View style={[styles.addButton, styles.photo]}>
+                                <Image style={styles.photoIcon} source={AppIcon.images.heartFilled} />
+                            </View>
+                        </TouchableOpacity>
                     </ScrollView>
                     <TextButton containerStyle={styles.addButtonContainer} onPress={this.onPost} style={styles.addButtonText}>Post Listing</TextButton>
 
