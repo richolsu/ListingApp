@@ -6,6 +6,9 @@ import FastImage from 'react-native-fast-image'
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import MapView, { Marker } from 'react-native-maps';
 import HeaderButton from '../components/HeaderButton';
+import StarRating from 'react-native-star-rating';
+import { Configuration } from '../Configuration';
+import { connect } from 'react-redux';
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 const LATITUDEDELTA = 0.0422;
@@ -13,8 +16,16 @@ const LONGITUDEDELTA = 0.0221;
 
 class DetailsScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
-        title: typeof (navigation.state.params) == 'undefined' || typeof (navigation.state.params.item) == 'undefined' ? 'Detail' : navigation.state.params.item.name,
-        headerRight: <View style={HeaderButtonStyle.multi}><HeaderButton icon={AppIcon.images.review} onPress={() => { navigation.state.params.onPressReview() }} /><HeaderButton icon={AppIcon.images.heart} onPress={() => { navigation.state.params.onPressLove() }} /></View>,
+        headerRight:
+            <View style={HeaderButtonStyle.multi}>
+                <HeaderButton
+                    icon={AppIcon.images.review}
+                    onPress={() => { navigation.state.params.onPressReview() }} />
+                <HeaderButton
+                    icon={navigation.state.params.saved ? AppIcon.images.heartFilled : AppIcon.images.heart}
+                    onPress={() => { navigation.state.params.onPressSave() }}
+                    style={{ tintColor: AppStyles.color.tint }} />
+            </View>,
     });
 
     constructor(props) {
@@ -22,15 +33,21 @@ class DetailsScreen extends React.Component {
 
         const { navigation } = props;
         const item = navigation.getParam('item');
-        console.log(item);
+
         this.ref = firebase.firestore().collection('Listings').doc(item.id);
         this.unsubscribe = null;
+        this.reviewsRef = firebase.firestore().collection('Reviews').where('listing_id', '==', item.id);
+        this.reviewsUnsubscribe = null;
+
+        this.savedListingsRef = firebase.firestore().collection('SavedListings').where('user_id', '==', this.props.user.id).where('listing_id', '==', item.id);
+        this.savedListingUnsubscribe = null;
 
         this.state = {
             activeSlide: 0,
             data: item,
             photo: item.photo,
             reviews: [],
+            saved: false,
         };
     }
 
@@ -45,24 +62,77 @@ class DetailsScreen extends React.Component {
         console.log(listing);
     }
 
+    onReviewsUpdate = (querySnapshot) => {
+        const data = [];
+        querySnapshot.forEach((doc) => {
+            const review = doc.data();
+            data.push({ ...review, id: doc.id });
+        });
+
+        this.setState({
+            reviews: data
+        });
+
+    }
+
+    onSavedListingsCollectionUpdate = (querySnapshot) => {
+        const savedListingdata = [];
+        querySnapshot.forEach((doc) => {
+            const savedListing = doc.data();
+            savedListingdata.push(savedListing);
+        });
+
+        this.setState({
+            saved: savedListingdata.length > 0,
+        });
+
+        this.props.navigation.setParams({
+            saved: this.state.saved,
+        });
+
+    }
+
     onPressReview = () => {
         this.props.navigation.navigate('Review', { item: this.state.data });
     }
 
-    onPressLove = () => {
+    onPressSave = () => {
+        if (this.state.saved) {
+            firebase.firestore().collection('SavedListings').where('listing_id', '==', this.state.data.id)
+                .where('user_id', '==', this.props.user.id)
+                .get().then(function (querySnapshot) {
+                    querySnapshot.forEach(function (doc) {
+                        doc.ref.delete();
+                    });
+                });
+        } else {
+            firebase.firestore().collection('SavedListings').add({
+                user_id: this.props.user.id,
+                listing_id: this.state.data.id,
+            }).then(function (docRef) {
 
+            }).catch(function (error) {
+                alert(error);
+            });
+        }
     }
 
     componentDidMount() {
         this.unsubscribe = this.ref.onSnapshot(this.onDocUpdate);
+        this.reviewsUnsubscribe = this.reviewsRef.onSnapshot(this.onReviewsUpdate);
+        this.savedListingsUnsubscribe = this.savedListingsRef.onSnapshot(this.onSavedListingsCollectionUpdate);
+
         this.props.navigation.setParams({
             onPressReview: this.onPressReview,
-            onPressLove: this.onPressLove,
+            onPressSave: this.onPressSave,
+            saved: this.state.saved,
         });
     }
 
     componentWillUnmount() {
         this.unsubscribe();
+        this.reviewsUnsubscribe();
+        this.savedListingsUnsubscribe();
     }
 
     renderItem = ({ item }) => (
@@ -82,13 +152,25 @@ class DetailsScreen extends React.Component {
         );
     };
 
-    renderReviewItem = ({ reviewItem }) => (
+    renderReviewItem = ({ item }) => (
         <View style={styles.reviewItem}>
             <View style={styles.info}>
-                <FastImage />
+                <FastImage style={styles.userPhoto} resizeMode={FastImage.resizeMode.cover} source={AppIcon.images.defaultUser} />
+                <View style={styles.detail}>
+                    <Text style={styles.username}>Florian Marcu</Text>
+                    <Text style={styles.reviewTime}>{Configuration.timeFormat(item.review_time)}</Text>
+                </View>
+                <StarRating containerStyle={styles.starRatingContainer}
+                    disabled={true}
+                    maxStars={5}
+                    starSize={22}
+                    starStyle={styles.starStyle}
+                    emptyStar={AppIcon.images.starNoFilled}
+                    fullStar={AppIcon.images.starFilled}
+                    rating={item.star_count}
+                />
             </View>
-            <Text style={styles.reviewContent}>
-            </Text>
+            <Text style={styles.reviewContent}>{item.content}</Text>
         </View>
     );
 
@@ -191,7 +273,7 @@ const styles = StyleSheet.create({
         color: AppStyles.color.description,
     },
     photoItem: {
-        backgroundColor: 'green',
+        backgroundColor: AppStyles.color.grey,
         height: 250,
         width: '100%',
     },
@@ -199,7 +281,6 @@ const styles = StyleSheet.create({
         flex: 1,
         position: 'absolute',
         alignSelf: 'center',
-        // backgroundColor: 'green',
         paddingVertical: 8,
         marginTop: 220,
     },
@@ -216,7 +297,7 @@ const styles = StyleSheet.create({
 
     },
     extra: {
-        padding:30,
+        padding: 30,
         paddingTop: 10,
         paddingBottom: 10,
     },
@@ -231,8 +312,45 @@ const styles = StyleSheet.create({
     },
     extraValue: {
         flex: 1,
+    },
+    reviewItem: {
+        padding: 10,
+        marginLeft: 10,
+    },
+    info: {
+        flexDirection: 'row',
+    },
+    userPhoto: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+    },
+    detail: {
+        paddingLeft: 10,
+        flex: 1,
+    },
+    username: {
+        color: AppStyles.color.title,
+        fontWeight: 'bold',
+    },
+    reviewTime: {
+
+    },
+    starRatingContainer: {
+        padding: 10,
+    },
+    starStyle: {
+        tintColor: AppStyles.color.tint
+    },
+    reviewContent: {
+        color: AppStyles.color.title,
+        marginTop: 10,
     }
 
 });
 
-export default DetailsScreen;
+const mapStateToProps = state => ({
+    user: state.auth.user,
+});
+
+export default connect(mapStateToProps)(DetailsScreen);

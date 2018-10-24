@@ -138,8 +138,13 @@ class PostScreen extends React.Component {
             alert("price empty");
             return;
         }
-        if (this.state.localPhotos.length==0) {
+        if (this.state.localPhotos.length == 0) {
             alert("Please pick photos");
+            return;
+        }
+
+        if (Object.keys(this.state.filter).length == 0) {
+            alert("Please set filters");
             return;
         }
 
@@ -180,7 +185,7 @@ class PostScreen extends React.Component {
             }).catch(function (error) {
                 alert(error);
             });
-        }).catch(reason=> {
+        }).catch(reason => {
             console.log(reason);
         });
 

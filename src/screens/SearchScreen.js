@@ -1,9 +1,10 @@
 import React from 'react';
-import { FlatList, Text, Image, View } from 'react-native';
-import { ListStyle } from '../AppStyles';
-import firebase from 'react-native-firebase';
+import { FlatList, Text, View } from 'react-native';
 import { ListItem, SearchBar } from "react-native-elements";
+import firebase from 'react-native-firebase';
+import { ListStyle } from '../AppStyles';
 import priceFormatter from "../components/CurrencyFormatter";
+import { Configuration } from '../Configuration';
 
 class SearchScreen extends React.Component {
     static navigationOptions = ({ navigation }) => {
@@ -98,7 +99,7 @@ class SearchScreen extends React.Component {
             subtitle={
                 <View style={ListStyle.subtitleView}>
                     <View style={ListStyle.leftSubtitle}>
-                        <Text style={ListStyle.description}>{item.description}</Text>
+                        <Text style={ListStyle.time}>{Configuration.timeFormat(item.post_time)}</Text>
                         <Text style={ListStyle.place}>{item.place}</Text>
                     </View>
                     <Text style={ListStyle.price}>{priceFormatter(item.price)}</Text>

@@ -20,5 +20,11 @@ export const Configuration = {
       latitude: 0.0422,
       longitude: 0.0221,
     }
+  },
+  timeFormat: (postTime) => {
+    time = "";
+    if (postTime)
+      time = postTime.toUTCString();
+    return time;
   }
 }

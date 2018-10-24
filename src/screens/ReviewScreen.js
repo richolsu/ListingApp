@@ -59,7 +59,8 @@ class ReviewScreen extends React.Component {
                     user_id: user.id,
                     listing_id: data.id,
                     star_count: starCount,
-                    content: content
+                    content: content,
+                    review_time: firebase.firestore.FieldValue.serverTimestamp(),
                 }).then(function (docRef) {
                     navigation.goBack();
                 }).catch(function (error) {
@@ -78,8 +79,8 @@ class ReviewScreen extends React.Component {
                     starSize={25}
                     starStyle={styles.starStyle}
                     selectedStar={(rating) => this.setState({ starCount: rating })}
-                    emptyStar={AppIcon.images.star_nofilled}
-                    fullStar={AppIcon.images.star_filled}
+                    emptyStar={AppIcon.images.starNoFilled}
+                    fullStar={AppIcon.images.starFilled}
                     rating={this.state.starCount}
                 />
                 <TextInput

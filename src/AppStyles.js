@@ -67,8 +67,9 @@ export const AppIcon = {
     map: require('../assets/icons/map.png'),
     search: require('../assets/icons/search.png'),
     review: require('../assets/icons/review.png'),
-    star_filled: require('../assets/icons/star_filled.png'),
-    star_nofilled: require('../assets/icons/star_nofilled.png'),
+    starFilled: require('../assets/icons/star_filled.png'),
+    starNoFilled: require('../assets/icons/star_nofilled.png'),
+    defaultUser: require('../assets/icons/default_user.jpg'),
   }
 
 }
@@ -111,10 +112,10 @@ export const ListStyle = StyleSheet.create({
   leftSubtitle: {
     flex: 1,
   },
-  description: {
+  time: {
     color: AppStyles.color.description,
     fontFamily: AppStyles.fontName.main,
-    flex: 1,
+    flex:1,
     textAlignVertical: 'bottom',
   },
   place: {
