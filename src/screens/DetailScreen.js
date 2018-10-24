@@ -48,6 +48,7 @@ class DetailsScreen extends React.Component {
             photo: item.photo,
             reviews: [],
             saved: false,
+            users: {},
         };
     }
 
@@ -62,15 +63,24 @@ class DetailsScreen extends React.Component {
         console.log(listing);
     }
 
+    updateReviews = (reviews) => {
+        this.setState({
+            reviews: reviews
+        });
+    }
+
     onReviewsUpdate = (querySnapshot) => {
         const data = [];
+        const updateReviews = this.updateReviews;
+
+        const state = this.state;
         querySnapshot.forEach((doc) => {
             const review = doc.data();
-            data.push({ ...review, id: doc.id });
-        });
 
-        this.setState({
-            reviews: data
+            firebase.firestore().collection('Users').doc(review.user_id).get().then(function (userDoc) {
+                data.push({ ...review, id: doc.id, name: userDoc.data().fullname });
+                updateReviews(data);
+            });
         });
 
     }
@@ -157,7 +167,7 @@ class DetailsScreen extends React.Component {
             <View style={styles.info}>
                 <FastImage style={styles.userPhoto} resizeMode={FastImage.resizeMode.cover} source={AppIcon.images.defaultUser} />
                 <View style={styles.detail}>
-                    <Text style={styles.username}>Florian Marcu</Text>
+                    <Text style={styles.username}>{item.name}</Text>
                     <Text style={styles.reviewTime}>{Configuration.timeFormat(item.review_time)}</Text>
                 </View>
                 <StarRating containerStyle={styles.starRatingContainer}
