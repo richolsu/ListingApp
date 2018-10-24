@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, StyleSheet, ScrollView, TouchableOpacity, Text, View } from 'react-native';
+import { Dimensions, FlatList, StyleSheet, ScrollView, TouchableOpacity, Text, View } from 'react-native';
 import { AppStyles, AppIcon, HeaderButtonStyle } from '../AppStyles';
 import firebase from 'react-native-firebase';
 import FastImage from 'react-native-fast-image'
@@ -14,7 +14,7 @@ const LONGITUDEDELTA = 0.0221;
 class DetailsScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         title: typeof (navigation.state.params) == 'undefined' || typeof (navigation.state.params.item) == 'undefined' ? 'Detail' : navigation.state.params.item.name,
-        headerRight: <View style={HeaderButtonStyle.multi}><HeaderButton icon={AppIcon.images.review} onPress={() => {navigation.state.params.onPressReview()} } /><HeaderButton icon={AppIcon.images.heart} onPress={() => {navigation.state.params.onPressLove()} } /></View>,
+        headerRight: <View style={HeaderButtonStyle.multi}><HeaderButton icon={AppIcon.images.review} onPress={() => { navigation.state.params.onPressReview() }} /><HeaderButton icon={AppIcon.images.heart} onPress={() => { navigation.state.params.onPressLove() }} /></View>,
     });
 
     constructor(props) {
@@ -28,24 +28,21 @@ class DetailsScreen extends React.Component {
 
         this.state = {
             activeSlide: 0,
-            loading: false,
             data: item,
-            page: 1,
-            seed: 1,
-            error: null,
-            refreshing: false,
-            count: 1,
             photo: item.photo,
+            reviews: [],
         };
     }
 
     onDocUpdate = (doc) => {
         const listing = doc.data();
-        
+
         this.setState({
-            data: {...listing, id:doc.id},
+            data: { ...listing, id: doc.id },
             loading: false,
         });
+
+        console.log(listing);
     }
 
     onPressReview = () => {
@@ -84,7 +81,29 @@ class DetailsScreen extends React.Component {
             />
         );
     };
+
+    renderReviewItem = ({ reviewItem }) => (
+        <View style={styles.reviewItem}>
+            <View style={styles.info}>
+                <FastImage />
+            </View>
+            <Text style={styles.reviewContent}>
+            </Text>
+        </View>
+    );
+
     render() {
+        const mapping = this.state.data.mapping;
+        extraInfoArr = Object.keys(mapping).map(function (key) {
+
+            return (
+                <View style={styles.extraRow}>
+                    <Text style={styles.extraKey}>{key}</Text>
+                    <Text style={styles.extraValue}>{mapping[key]}</Text>
+                </View>
+            )
+        });
+
         const { activeSlide } = this.state;
         return (
             <ScrollView style={styles.container}>
@@ -137,6 +156,17 @@ class DetailsScreen extends React.Component {
                         }}
                     />
                 </MapView>
+                <Text style={styles.title}> {'Extra info'} </Text>
+                <View style={styles.extra}>
+                    {extraInfoArr}
+                </View>
+                <Text style={styles.title}> {'Reviews'} </Text>
+                <FlatList
+                    data={this.state.reviews}
+                    renderItem={this.renderReviewItem}
+                    keyExtractor={item => `${item.id}`}
+                    initialNumToRender={5}
+                />
             </ScrollView>
         );
     }
@@ -184,6 +214,23 @@ const styles = StyleSheet.create({
         height: 200,
         backgroundColor: AppStyles.color.grey,
 
+    },
+    extra: {
+        padding:30,
+        paddingTop: 10,
+        paddingBottom: 10,
+    },
+    extraRow: {
+        flexDirection: 'row',
+        paddingBottom: 10,
+    },
+    extraKey: {
+        flex: 1,
+        color: AppStyles.color.title,
+        fontWeight: 'bold',
+    },
+    extraValue: {
+        flex: 1,
     }
 
 });
