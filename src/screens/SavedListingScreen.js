@@ -32,7 +32,7 @@ class SavedListingScreen extends React.Component {
             const listing = doc.data();
             if (this.state.savedListings.findIndex(k => k == doc.id) >= 0) {
                 listing.saved = true;
-                data.push({ ...listing, id: doc.id, starCount:3 });
+                data.push({ ...listing, id: doc.id, starCount: 3 });
             }
 
         });
@@ -105,11 +105,12 @@ class SavedListingScreen extends React.Component {
                     <Text style={TwoColumnListStyle.listingName}>{item.name}</Text>
                     <Text style={TwoColumnListStyle.listingPlace}>{item.place}</Text>
                     <StarRating containerStyle={styles.starRatingContainer}
-                        disabled={false}
                         maxStars={5}
                         starSize={15}
                         disabled={true}
-                        fullStarColor={'green'}
+                        starStyle={styles.starStyle}
+                        emptyStar={AppIcon.images.starNoFilled}
+                        fullStar={AppIcon.images.starFilled}
                         rating={item.starCount}
                     />
                 </View>
@@ -139,9 +140,12 @@ const styles = StyleSheet.create({
         padding: Configuration.home.listing_item.offset,
     },
     starRatingContainer: {
-        width: 90,         
+        width: 90,
         marginTop: 10
-    }
+    },
+    starStyle: {
+        tintColor: AppStyles.color.tint
+    },
 })
 
 const mapStateToProps = state => ({
