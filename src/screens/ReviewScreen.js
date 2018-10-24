@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     },
     btnContainer: {
         width: '100%',
-        backgroundColor: AppStyles.color.blue,
+        backgroundColor: AppStyles.color.tint,
         marginTop: 10,
         padding: 10,
     },
