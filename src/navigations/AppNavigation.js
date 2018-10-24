@@ -10,6 +10,7 @@ import FilterScreen from '../screens/FilterScreen';
 import ListingScreen from '../screens/ListingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import PostScreen from '../screens/PostScreen';
+import ReviewScreen from '../screens/ReviewScreen';
 import MapScreen from '../screens/MapScreen';
 import SelectLocationScreen from '../screens/SelectLocationScreen';
 import SavedListingScreen from '../screens/SavedListingScreen';
@@ -49,6 +50,7 @@ const HomeStack = createStackNavigator({
     Listing: { screen: ListingScreen },
     Detail: { screen: DetailScreen },
     Post: { screen: PostScreen },
+    Review: { screen: ReviewScreen },
     Map: { screen: MapScreen },
     SelectLocation: { screen: SelectLocationScreen}
 }, {

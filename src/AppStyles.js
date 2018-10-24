@@ -66,11 +66,17 @@ export const AppIcon = {
     heartFilled: require('../assets/icons/heart-filled.png'),
     map: require('../assets/icons/map.png'),
     search: require('../assets/icons/search.png'),
+    review: require('../assets/icons/review.png'),
+    star_filled: require('../assets/icons/star_filled.png'),
+    star_nofilled: require('../assets/icons/star_nofilled.png'),
   }
 
 }
 
 export const HeaderButtonStyle = StyleSheet.create({
+  multi: {
+    flexDirection: 'row',
+  },
   container: {
     padding: 10,
   },

@@ -1,10 +1,11 @@
 import React from 'react';
 import { Dimensions, StyleSheet, ScrollView, TouchableOpacity, Text, View } from 'react-native';
-import { AppStyles } from '../AppStyles';
+import { AppStyles, AppIcon, HeaderButtonStyle } from '../AppStyles';
 import firebase from 'react-native-firebase';
 import FastImage from 'react-native-fast-image'
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import MapView, { Marker } from 'react-native-maps';
+import HeaderButton from '../components/HeaderButton';
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 const LATITUDEDELTA = 0.0422;
@@ -13,6 +14,7 @@ const LONGITUDEDELTA = 0.0221;
 class DetailsScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         title: typeof (navigation.state.params) == 'undefined' || typeof (navigation.state.params.item) == 'undefined' ? 'Detail' : navigation.state.params.item.name,
+        headerRight: <View style={HeaderButtonStyle.multi}><HeaderButton icon={AppIcon.images.review} onPress={() => {navigation.state.params.onPressReview()} } /><HeaderButton icon={AppIcon.images.heart} onPress={() => {navigation.state.params.onPressLove()} } /></View>,
     });
 
     constructor(props) {
@@ -39,15 +41,27 @@ class DetailsScreen extends React.Component {
 
     onDocUpdate = (doc) => {
         const listing = doc.data();
-        console.log(listing);
+        
         this.setState({
-            data: listing,
+            data: {...listing, id:doc.id},
             loading: false,
         });
     }
 
+    onPressReview = () => {
+        this.props.navigation.navigate('Review', { item: this.state.data });
+    }
+
+    onPressLove = () => {
+
+    }
+
     componentDidMount() {
-        this.unsubscribe = this.ref.onSnapshot(this.onDocUpdate)
+        this.unsubscribe = this.ref.onSnapshot(this.onDocUpdate);
+        this.props.navigation.setParams({
+            onPressReview: this.onPressReview,
+            onPressLove: this.onPressLove,
+        });
     }
 
     componentWillUnmount() {
