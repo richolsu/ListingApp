@@ -13,7 +13,7 @@ class HomeScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         title: 'Home',
         headerLeft: <HeaderButton icon={AppIcon.images.map} onPress={() => {navigation.navigate('Map')} } />,
-        headerRight: <HeaderButton icon={AppIcon.images.review} onPress={() => { navigation.navigate('Post') }} />,
+        headerRight: <HeaderButton icon={AppIcon.images.compose} onPress={() => { navigation.navigate('Post') }} />,
     });
 
     constructor(props) {
@@ -55,7 +55,7 @@ class HomeScreen extends React.Component {
             loading: false,
         });
         if (data.length > 0)
-            this.onPressCategoryItem(data[0]);
+            this.showFirstCategoryItem(data[0]);
     }
 
     onListingsCollectionUpdate = (querySnapshot) => {
@@ -119,6 +119,10 @@ class HomeScreen extends React.Component {
     }
 
     onPressCategoryItem = (item) => {
+        this.props.navigation.navigate('Listing', { item: item });
+    }
+
+    showFirstCategoryItem = (item) => {
         this.state.selectedCategoryName = item.name;
         this.listingsRef = firebase.firestore().collection('Listings').where('category_id', '==', item.id);
         this.listingsUnsubscribe = this.listingsRef.onSnapshot(this.onListingsCollectionUpdate);
@@ -200,7 +204,7 @@ class HomeScreen extends React.Component {
     renderListingFooter = () => {
         return (
             <Button containerStyle={TwoColumnListStyle.showAllButtonContainer} style={TwoColumnListStyle.showAllButtonText} onPress={() => this.onShowAll()}>
-                Show all({this.state.allListings.length})
+                Show all ({this.state.allListings.length})
             </Button>
         );
     };
@@ -258,12 +262,14 @@ const styles = StyleSheet.create({
     },
     categoryItemContainer: {
         borderRadius: 5,
-        borderWidth: 1,
+        borderWidth: 0.5,
         borderColor: 'grey',
         paddingBottom: 10,
     },
     categoryItemPhoto: {
         height: 60,
+        borderTopLeftRadius: 5,
+        borderTopRightRadius: 5,
         width: 110,
     },
     categoryItemTitle: {

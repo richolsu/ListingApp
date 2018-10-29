@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     },
     title: {
         color: 'white',
-        fontSize: 19,
+        fontSize: 17,
         fontFamily: AppStyles.fontName.bold,
         textAlign: 'center'
     },

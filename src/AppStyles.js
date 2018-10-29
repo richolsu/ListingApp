@@ -67,6 +67,7 @@ export const AppIcon = {
     map: require('../assets/icons/map.png'),
     search: require('../assets/icons/search.png'),
     review: require('../assets/icons/review.png'),
+    list: require('../assets/icons/list.png'),
     starFilled: require('../assets/icons/star_filled.png'),
     starNoFilled: require('../assets/icons/star_nofilled.png'),
     defaultUser: require('../assets/icons/default_user.jpg'),
@@ -98,13 +99,13 @@ export const HeaderButtonStyle = StyleSheet.create({
 
 export const ListStyle = StyleSheet.create({
   title: {
-    fontSize: 18,
+    fontSize: 16,
     color: AppStyles.color.subtitle,
     fontFamily: AppStyles.fontName.bold,
     fontWeight: 'bold',
   },
   subtitleView: {
-    minHeight: 75,
+    minHeight: 55,
     flexDirection: 'row',
     paddingTop: 5,
     marginLeft: 10,
@@ -119,17 +120,18 @@ export const ListStyle = StyleSheet.create({
     textAlignVertical: 'bottom',
   },
   place: {
+    fontWeight: 'bold',
     color: AppStyles.color.location,
   },
   price: {
-    fontSize: 18,
+    fontSize: 14,
     color: AppStyles.color.subtitle,
     fontFamily: AppStyles.fontName.bold,
     textAlignVertical: 'bottom',
   },
   avatarStyle: {
-    height: 100,
-    width: 100
+    height: 80,
+    width: 80
   }
 });
 
@@ -140,11 +142,12 @@ export const TwoColumnListStyle = {
     flex: 1,
   },
   showAllButtonContainer: {
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 5,
     borderColor: AppStyles.color.greenBlue,
     height: 50,
     width: '100%',
+    marginBottom: 30,
   },
   showAllButtonText: {
     padding: 10,

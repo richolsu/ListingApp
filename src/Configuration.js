@@ -1,7 +1,7 @@
 
 export const Configuration = {
   home: {
-    initial_show_count: 2,
+    initial_show_count: 4,
     listing_item: {
       height: 130,
       offset: 15,
