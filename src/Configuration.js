@@ -1,3 +1,4 @@
+import moment from 'moment';
 
 export const Configuration = {
   home: {
@@ -23,8 +24,10 @@ export const Configuration = {
   },
   timeFormat: (postTime) => {
     time = "";
-    if (postTime)
-      time = postTime.toUTCString();
+    if (postTime) {
+      time = moment(postTime).fromNow();
+    }
+      // time = postTime.toUTCString();
     return time;
   }
 }
