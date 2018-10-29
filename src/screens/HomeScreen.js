@@ -12,8 +12,8 @@ import { Configuration } from '../Configuration';
 class HomeScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         title: 'Home',
-        headerRight: <HeaderButton icon={AppIcon.images.filter} onPress={() => {navigation.state.params.onPressFilter()} } />,
-        headerLeft: <HeaderButton icon={AppIcon.images.review} onPress={() => { navigation.navigate('Post') }} />,
+        headerLeft: <HeaderButton icon={AppIcon.images.map} onPress={() => {navigation.navigate('Map')} } />,
+        headerRight: <HeaderButton icon={AppIcon.images.review} onPress={() => { navigation.navigate('Post') }} />,
     });
 
     constructor(props) {

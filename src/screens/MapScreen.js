@@ -19,8 +19,12 @@ class MapScreen extends React.Component {
         const { navigation } = props;
         const item = navigation.getParam('item');
 
-
-        this.ref = firebase.firestore().collection('Listings').where('category_id', '==', item.id);
+        if (item) {
+            this.ref = firebase.firestore().collection('Listings').where('category_id', '==', item.id);
+        }else{
+            this.ref = firebase.firestore().collection('Listings');
+        }
+        
         this.unsubscribe = null;
 
         this.state = {
