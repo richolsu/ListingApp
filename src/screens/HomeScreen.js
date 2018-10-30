@@ -194,7 +194,7 @@ class HomeScreen extends React.Component {
                 <View style={TwoColumnListStyle.listingItemContainer}>
                     <FastImage style={TwoColumnListStyle.listingPhoto} source={{ uri: item.cover_photo }} />
                     <SavedButton style={TwoColumnListStyle.savedIcon} onPress={() => this.onPressSavedIcon(item)} item={item} />
-                    <Text style={TwoColumnListStyle.listingName}>{item.name}</Text>
+                    <Text style={{...TwoColumnListStyle.listingName, minHeight: 40}}>{item.name}</Text>
                     <Text style={TwoColumnListStyle.listingPlace}>{item.place}</Text>
                 </View>
             </TouchableOpacity>

@@ -102,7 +102,7 @@ class SavedListingScreen extends React.Component {
                 <View style={TwoColumnListStyle.listingItemContainer}>
                     <FastImage style={TwoColumnListStyle.listingPhoto} source={{ uri: item.cover_photo }} />
                     <SavedButton style={TwoColumnListStyle.savedIcon} onPress={() => this.onPressSavedIcon(item)} item={item} />
-                    <Text style={TwoColumnListStyle.listingName}>{item.name}</Text>
+                    <Text numberOfLines={1} style={TwoColumnListStyle.listingName}>{item.name}</Text>
                     <Text style={TwoColumnListStyle.listingPlace}>{item.place}</Text>
                     <StarRating containerStyle={styles.starRatingContainer}
                         maxStars={5}

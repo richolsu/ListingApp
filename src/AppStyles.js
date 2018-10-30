@@ -178,7 +178,6 @@ export const TwoColumnListStyle = {
   },
   listingName: {
     fontSize: 15,
-    minHeight: 40,
     fontFamily: AppStyles.fontName.bold,
     fontWeight: 'bold',
     color: AppStyles.color.categoryTitle,
