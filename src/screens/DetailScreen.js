@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
     },
     extraKey: {
-        flex: 1,
+        flex: 2,
         color: AppStyles.color.title,
         fontWeight: 'bold',
     },
