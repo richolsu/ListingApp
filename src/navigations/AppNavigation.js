@@ -18,6 +18,7 @@ import SearchScreen from '../screens/SearchScreen';
 import SignupScreen from '../screens/SignupScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import { AppIcon, AppStyles } from '../AppStyles';
+import { Configuration } from '../Configuration';
 
 const noTransitionConfig = () => ({
     transitionSpec: {
@@ -165,9 +166,15 @@ const TabNavigator = createBottomTabNavigator(
                 return <Image style={{tintColor: focused?AppStyles.color.tint:AppStyles.color.grey}}  source={iconName}/>;
             },
         }),
+        initialLayout: {
+            height: 300,
+        },
         tabBarOptions: {
             activeTintColor: AppStyles.color.tint,
             inactiveTintColor: 'gray',
+            style: {
+                height: Configuration.home.tab_bar_height,
+            }
         },
     }
 );

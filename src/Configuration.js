@@ -2,6 +2,7 @@ import moment from 'moment';
 
 export const Configuration = {
   home: {
+    tab_bar_height: 50,
     initial_show_count: 4,
     listing_item: {
       height: 130,

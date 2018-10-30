@@ -16,6 +16,9 @@ const LONGITUDEDELTA = 0.0221;
 
 class DetailsScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
+        headerStyle: {
+            backgroundColor: 'transparent',
+        },
         headerRight:
             <View style={HeaderButtonStyle.multi}>
                 <HeaderButton
@@ -269,6 +272,8 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
         flex: 1,
+        height: Dimensions.get('window').height - Configuration.home.tab_bar_height,
+        position: 'absolute',
     },
     title: {
         fontFamily: AppStyles.fontName.bold,
