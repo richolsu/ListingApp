@@ -327,6 +327,7 @@ const styles = StyleSheet.create({
     },
     extraValue: {
         flex: 1,
+        color: '#bcbfc7',
     },
     reviewItem: {
         padding: 10,
