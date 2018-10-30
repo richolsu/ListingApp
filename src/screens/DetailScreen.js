@@ -190,13 +190,14 @@ class DetailsScreen extends React.Component {
     render() {
         const mapping = this.state.data.mapping;
         extraInfoArr = Object.keys(mapping).map(function (key) {
-
-            return (
-                <View style={styles.extraRow}>
-                    <Text style={styles.extraKey}>{key}</Text>
-                    <Text style={styles.extraValue}>{mapping[key]}</Text>
-                </View>
-            )
+            if (mapping[key] != 'Any' && mapping[key] != 'All') {
+                return (
+                    <View style={styles.extraRow}>
+                        <Text style={styles.extraKey}>{key}</Text>
+                        <Text style={styles.extraValue}>{mapping[key]}</Text>
+                    </View>
+                )
+            }
         });
 
         const { activeSlide } = this.state;
@@ -255,7 +256,9 @@ class DetailsScreen extends React.Component {
                 <View style={styles.extra}>
                     {extraInfoArr}
                 </View>
-                <Text style={styles.title}> {'Reviews'} </Text>
+                {this.state.reviews.length > 0 &&
+                    <Text style={[styles.title, styles.reviewTitle]}> {'Reviews'} </Text>
+                }
                 <FlatList
                     data={this.state.reviews}
                     renderItem={this.renderReviewItem}
@@ -281,6 +284,9 @@ const styles = StyleSheet.create({
         color: AppStyles.color.title,
         fontSize: 25,
         padding: 10,
+    },
+    reviewTitle: {
+        paddingTop: 0,
     },
     description: {
         fontFamily: AppStyles.fontName.bold,
@@ -314,7 +320,8 @@ const styles = StyleSheet.create({
     extra: {
         padding: 30,
         paddingTop: 10,
-        paddingBottom: 10,
+        paddingBottom: 0,
+        marginBottom: 30,
     },
     extraRow: {
         flexDirection: 'row',
