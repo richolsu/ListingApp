@@ -90,6 +90,7 @@ class MapScreen extends React.Component {
             <Marker
                 title={listing.name}
                 description={listing.description}
+                onCalloutPress= {() => {this.onPress(listing);}}
                 coordinate={{
                     latitude: listing.coordinate._latitude,
                     longitude: listing.coordinate._longitude,

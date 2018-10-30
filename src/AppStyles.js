@@ -91,6 +91,7 @@ export const HeaderButtonStyle = StyleSheet.create({
   rightButton: {
     color: AppStyles.color.tint,
     marginRight: 10,
+    fontWeight: 'normal',
     fontFamily: AppStyles.fontName.main,
   },
 });
@@ -220,6 +221,5 @@ export const ModalSelectorStyle = {
     fontSize: 21,
     color: AppStyles.color.blue,
     fontFamily: AppStyles.fontName.main,
-    fontWeight: 'bold',
   }
 }

@@ -344,9 +344,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     userPhoto: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
+        width: 44,
+        height: 44,
+        borderRadius: 22,
     },
     detail: {
         paddingLeft: 10,
@@ -357,7 +357,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     reviewTime: {
-
+        color: '#bcbfc7',
+        fontSize: 12,
     },
     starRatingContainer: {
         padding: 10,
