@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, Platform, StyleSheet, Image, TouchableOpacity, TextInput, Text, View } from "react-native";
+import { ScrollView, Platform, StyleSheet, Image, Button, TouchableOpacity, TextInput, Text, View } from "react-native";
 import firebase from 'react-native-firebase';
 import ModalSelector from 'react-native-modal-selector';
 import { AppStyles, AppIcon, ModalSelectorStyle, HeaderButtonStyle } from '../AppStyles';
@@ -8,7 +8,7 @@ import FastImage from 'react-native-fast-image'
 import { Configuration } from '../Configuration';
 import { connect } from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 class PostScreen extends React.Component {
@@ -28,8 +28,8 @@ class PostScreen extends React.Component {
 
         this.state = {
             categories: [],
-            title: 'Test title',
-            description: 'Test Description',
+            title: '',
+            description: '',
             category: {},
             location: {
                 latitude: Configuration.map.origin.latitude,
@@ -64,21 +64,6 @@ class PostScreen extends React.Component {
 
     componentWillUnmount() {
         this.unsubscribeCategory();
-    }
-
-    handlePriceInputChange = (price) => {
-        let newText = '';
-        let numbers = '0123456789';
-
-        for (var i = 0; i < price.length; i++) {
-            if (numbers.indexOf(price[i]) > -1) {
-                newText = newText + price[i];
-            }
-        }
-
-        this.setState({
-            price: newText
-        });
     }
 
     selectLocation = () => {
@@ -224,7 +209,7 @@ class PostScreen extends React.Component {
                             style={styles.priceInput}
                             keyboardType='numeric'
                             value={this.state.price}
-                            onChangeText={this.handlePriceInputChange}
+                            onChangeText={(text) => this.setState({ price: text })}
                             placeholderTextColor={AppStyles.color.grey}
                             underlineColorAndroid='transparent' />
                     </View>
@@ -263,7 +248,7 @@ class PostScreen extends React.Component {
                         {photos}
                         <TouchableOpacity onPress={this.onPressAddPhotoBtn.bind(this)}>
                             <View style={[styles.addButton, styles.photo]}>
-                                <Image style={styles.photoIcon} source={AppIcon.images.heartFilled} />
+                                <Icon name='camera' size={30} color='white' />
                             </View>
                         </TouchableOpacity>
                     </ScrollView>
@@ -296,7 +281,7 @@ const styles = StyleSheet.create({
         fontSize: 19,
         padding: 10,
         paddingTop: 15,
-        paddingBottom: 15,
+        paddingBottom: 7,
         fontFamily: AppStyles.fontName.bold,
         fontWeight: 'bold',
         borderBottomWidth: 2,
@@ -315,13 +300,16 @@ const styles = StyleSheet.create({
     },
     priceInput: {
         flex: 1,
+        borderRadius: 5,
+        borderColor: AppStyles.color.grey,
+        borderWidth: 1,
+        height: 40,
         textAlign: 'right',
-        paddingRight: 0,
         fontFamily: AppStyles.fontName.main,
         color: AppStyles.color.text,
     },
     title: {
-        flex: 1,
+        flex: 2,
         textAlign: 'left',
         alignItems: 'center',
         color: AppStyles.color.title,
@@ -347,21 +335,21 @@ const styles = StyleSheet.create({
     },
     addPhotoTitle: {
         color: AppStyles.color.title,
-        fontSize: 25,
-        paddingLeft: 20,
-        marginTop: 20,
+        fontSize: 19,
+        paddingLeft: 10,
+        marginTop: 10,
         fontFamily: AppStyles.fontName.bold,
         fontWeight: 'bold',
     },
     photoList: {
-        height: 80,
+        height: 70,
         marginTop: 20,
         marginRight: 10,
     },
     photo: {
         marginLeft: 10,
-        width: 80,
-        height: 80,
+        width: 70,
+        height: 70,
         borderRadius: 10,
     },
 
@@ -382,7 +370,10 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     addButtonText: {
-        color: AppStyles.color.white
+        color: AppStyles.color.white,
+        fontWeight: 'bold',
+        fontFamily: AppStyles.fontName.bold,
+        fontSize: 15,
     },
 
 });

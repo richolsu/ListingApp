@@ -3,7 +3,6 @@ import { FlatList, Text, View } from 'react-native';
 import { ListItem, SearchBar } from "react-native-elements";
 import firebase from 'react-native-firebase';
 import { ListStyle } from '../AppStyles';
-import priceFormatter from "../components/CurrencyFormatter";
 import { Configuration } from '../Configuration';
 
 class SearchScreen extends React.Component {
@@ -102,7 +101,7 @@ class SearchScreen extends React.Component {
                         <Text style={ListStyle.time}>{Configuration.timeFormat(item.post_time)}</Text>
                         <Text style={ListStyle.place}>{item.place}</Text>
                     </View>
-                    <Text style={ListStyle.price}>{priceFormatter(item.price)}</Text>
+                    <Text style={ListStyle.price}>{item.price}</Text>
                 </View>
             }
             onPress={() => this.onPress(item)}

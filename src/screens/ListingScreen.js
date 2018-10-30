@@ -3,7 +3,6 @@ import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { ListItem } from "react-native-elements";
 import firebase from 'react-native-firebase';
 import { AppIcon, AppStyles, ListStyle, HeaderButtonStyle } from '../AppStyles';
-import priceFormatter from "../components/CurrencyFormatter";
 import HeaderButton from '../components/HeaderButton';
 import { Configuration } from '../Configuration';
 import MapView, { Marker } from 'react-native-maps';
@@ -125,7 +124,7 @@ class ListingScreen extends React.Component {
                         <Text style={ListStyle.time}>{Configuration.timeFormat(item.post_time)}</Text>
                         <Text style={ListStyle.place}>{item.place}</Text>
                     </View>
-                    <Text style={ListStyle.price}>{priceFormatter(item.price)}</Text>
+                    <Text style={ListStyle.price}>{item.price}</Text>
                 </View>
             }
             onPress={() => this.onPress(item)}
