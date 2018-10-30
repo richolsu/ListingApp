@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, Platform, StyleSheet, Image, Button, TouchableOpacity, TextInput, Text, View } from "react-native";
+import { Modal, ScrollView, Platform, StyleSheet, Image, Button, TouchableOpacity, TextInput, Text, View } from "react-native";
 import firebase from 'react-native-firebase';
 import ModalSelector from 'react-native-modal-selector';
 import { AppStyles, AppIcon, ModalSelectorStyle, HeaderButtonStyle } from '../AppStyles';
@@ -9,7 +9,7 @@ import { Configuration } from '../Configuration';
 import { connect } from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import FilterView from '../components/FilterView';
 
 class PostScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
@@ -40,6 +40,7 @@ class PostScreen extends React.Component {
             price: '1000',
             textInputValue: '',
             filter: {},
+            filterModalVisible: false,
         };
     }
 
@@ -71,7 +72,7 @@ class PostScreen extends React.Component {
     }
 
     selectFilter = () => {
-        this.props.navigation.navigate('Filter', { filter: this.state.filter, onSelectFilterDone: this.onSelectFilterDone });
+        this.setState({filterModalVisible: true});
     }
 
     onSelectLocationDone = (location) => {
@@ -79,7 +80,8 @@ class PostScreen extends React.Component {
     }
 
     onSelectFilterDone = (filter) => {
-        this.setState(filter);
+        this.setState({filterModalVisible: false});
+        this.setState({filter:filter});
     }
     onPressAddPhotoBtn = () => {
         // More info on all the options is below in the API Reference... just some common use cases shown here
@@ -255,6 +257,15 @@ class PostScreen extends React.Component {
                     <TextButton containerStyle={styles.addButtonContainer} onPress={this.onPost} style={styles.addButtonText}>Post Listing</TextButton>
 
                 </View>
+                <Modal
+                    animationType="slide"
+                    transparent={false}
+                    visible={this.state.filterModalVisible}
+                    onRequestClose={() => {
+                        this.setState({filterModalVisible: false});
+                    }}>
+                    <FilterView visible={this.state.filterModalVisible} value={this.state.filter} onDone={this.onSelectFilterDone}></FilterView>
+                </Modal>
             </ScrollView>
         );
     }
