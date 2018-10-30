@@ -215,7 +215,7 @@ class DetailsScreen extends React.Component {
                         firstItem={0}
                         loop={false}
                         // loopClonesPerSide={2}
-                        autoplay={true}
+                        autoplay={false}
                         autoplayDelay={500}
                         autoplayInterval={3000}
                         onSnapToItem={(index) => this.setState({ activeSlide: index })}
