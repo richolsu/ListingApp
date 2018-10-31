@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, ScrollView, Platform, StyleSheet, Image, Button, TouchableOpacity, TextInput, Text, View } from "react-native";
 import firebase from 'react-native-firebase';
 import ModalSelector from 'react-native-modal-selector';
-import { AppStyles, AppIcon, ModalSelectorStyle, HeaderButtonStyle } from '../AppStyles';
+import { AppStyles, AppIcon, ModalHeaderStyle, ModalSelectorStyle, HeaderButtonStyle } from '../AppStyles';
 import TextButton from 'react-native-button';
 import FastImage from 'react-native-fast-image'
 import { Configuration } from '../Configuration';
@@ -12,15 +12,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import FilterViewModal from '../components/FilterViewModal';
 import SelectLocationModal from '../components/SelectLocationModal';
 
-class PostScreen extends React.Component {
-    static navigationOptions = ({ navigation }) => ({
-        title: 'Add Listing',
-        headerRight: (<TextButton
-            onPress={() => { navigation.goBack(null) }}
-            style={HeaderButtonStyle.rightButton}
-        >Cancel</TextButton>),
-    });
-
+class PostModal extends React.Component {
     constructor(props) {
         super(props);
 
@@ -94,6 +86,7 @@ class PostScreen extends React.Component {
         this.setState({ filter: filter });
         this.setState({ filterModalVisible: false });
     }
+
     onPressAddPhotoBtn = () => {
         // More info on all the options is below in the API Reference... just some common use cases shown here
         const options = {
@@ -122,8 +115,15 @@ class PostScreen extends React.Component {
             }
         });
     }
+
+    onCancel = () => {
+        this.props.onCancel();
+    }
+
     onPost = () => {
         const navigation = this.props.navigation;
+        const onCancel = this.onCancel;
+
         if (!this.state.title) {
             alert("title empty");
             return;
@@ -179,7 +179,7 @@ class PostScreen extends React.Component {
                 cover_photo: photoUrls[0],
                 list_of_photos: photoUrls,
             }).then(function (docRef) {
-                navigation.goBack();
+                onCancel();
             }).catch(function (error) {
                 alert(error);
             });
@@ -198,89 +198,101 @@ class PostScreen extends React.Component {
             <FastImage style={styles.photo} source={{ uri: photo }} />
         ));
         return (
-            <ScrollView style={styles.body}>
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Title</Text>
-                    <TextInput style={styles.input} value={this.state.title} onChangeText={(text) => this.setState({ title: text })} placeholder="Start typing" placeholderTextColor={AppStyles.color.grey} underlineColorAndroid='transparent' />
+            <Modal
+                animationType="slide"
+                transparent={false}
+                onRequestClose={this.onCancel}>
+                <View style={ModalHeaderStyle.bar}>
+                    <Text style={ModalHeaderStyle.title}>Add Listing</Text>
+                    <TextButton style={[ModalHeaderStyle.rightButton, styles.rightButton]} onPress={this.onCancel} >Cancel</TextButton>
                 </View>
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Description</Text>
-                    <TextInput
-                        multiline={true}
-                        numberOfLines={2}
-                        style={styles.input}
-                        onChangeText={(text) => this.setState({ description: text })}
-                        value={this.state.description}
-                        placeholder="Start typing"
-                        placeholderTextColor={AppStyles.color.grey}
-                        underlineColorAndroid='transparent' />
-                </View>
-                <View style={styles.section}>
-                    <View style={styles.row}>
-                        <Text style={styles.title}>Price</Text>
+                <ScrollView style={styles.body}>
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>Title</Text>
+                        <TextInput style={styles.input} value={this.state.title} onChangeText={(text) => this.setState({ title: text })} placeholder="Start typing" placeholderTextColor={AppStyles.color.grey} underlineColorAndroid='transparent' />
+                    </View>
+                    <View style={styles.divider}/>
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>Description</Text>
                         <TextInput
-                            style={styles.priceInput}
-                            keyboardType='numeric'
-                            value={this.state.price}
-                            onChangeText={(text) => this.setState({ price: text })}
+                            multiline={true}
+                            numberOfLines={2}
+                            style={styles.input}
+                            onChangeText={(text) => this.setState({ description: text })}
+                            value={this.state.description}
+                            placeholder="Start typing"
                             placeholderTextColor={AppStyles.color.grey}
                             underlineColorAndroid='transparent' />
                     </View>
-                    <ModalSelector
-                        touchableActiveOpacity={0.9}
-                        data={categoryData}
-                        sectionTextStyle={ModalSelectorStyle.sectionTextStyle}
-                        optionTextStyle={ModalSelectorStyle.optionTextStyle}
-                        optionContainerStyle={ModalSelectorStyle.optionContainerStyle}
-                        cancelContainerStyle={ModalSelectorStyle.cancelContainerStyle}
-                        cancelTextStyle={ModalSelectorStyle.cancelTextStyle}
-                        selectedItemTextStyle={ModalSelectorStyle.selectedItemTextStyle}
-                        backdropPressToClose={true}
-                        cancelText={'Cancel'}
-                        initValue={this.state.category.name}
-                        onChange={(option) => { this.setState({ category: { id: option.key, name: option.label } }) }}>
+                    <View style={styles.divider}/>
+                    <View style={styles.section}>
                         <View style={styles.row}>
-                            <Text style={styles.title}>Category</Text>
-                            <Text style={styles.value}>{this.state.category.name}</Text>
+                            <Text style={styles.title}>Price</Text>
+                            <TextInput
+                                style={styles.priceInput}
+                                keyboardType='numeric'
+                                value={this.state.price}
+                                onChangeText={(text) => this.setState({ price: text })}
+                                placeholderTextColor={AppStyles.color.grey}
+                                underlineColorAndroid='transparent' />
                         </View>
-                    </ModalSelector>
-                    <TouchableOpacity onPress={this.selectFilter}>
-                        <View style={styles.row}>
-                            <Text style={styles.title}>Filters</Text>
-                            <Text style={styles.value}>Select...</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={this.selectLocation}>
-                        <View style={styles.row}>
-                            <Text style={styles.title}>Location</Text>
-                            <Text style={styles.value}>Select...</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <Text style={styles.addPhotoTitle}>Add Photos</Text>
-                    <ScrollView style={styles.photoList} horizontal={true}>
-                        {photos}
-                        <TouchableOpacity onPress={this.onPressAddPhotoBtn.bind(this)}>
-                            <View style={[styles.addButton, styles.photo]}>
-                                <Icon name='camera' size={30} color='white' />
+                        <ModalSelector
+                            touchableActiveOpacity={0.9}
+                            data={categoryData}
+                            sectionTextStyle={ModalSelectorStyle.sectionTextStyle}
+                            optionTextStyle={ModalSelectorStyle.optionTextStyle}
+                            optionContainerStyle={ModalSelectorStyle.optionContainerStyle}
+                            cancelContainerStyle={ModalSelectorStyle.cancelContainerStyle}
+                            cancelTextStyle={ModalSelectorStyle.cancelTextStyle}
+                            selectedItemTextStyle={ModalSelectorStyle.selectedItemTextStyle}
+                            backdropPressToClose={true}
+                            cancelText={'Cancel'}
+                            initValue={this.state.category.name}
+                            onChange={(option) => { this.setState({ category: { id: option.key, name: option.label } }) }}>
+                            <View style={styles.row}>
+                                <Text style={styles.title}>Category</Text>
+                                <Text style={styles.value}>{this.state.category.name}</Text>
+                            </View>
+                        </ModalSelector>
+                        <TouchableOpacity onPress={this.selectFilter}>
+                            <View style={styles.row}>
+                                <Text style={styles.title}>Filters</Text>
+                                <Text style={styles.value}>Select...</Text>
                             </View>
                         </TouchableOpacity>
-                    </ScrollView>
-                    <TextButton containerStyle={styles.addButtonContainer} onPress={this.onPost} style={styles.addButtonText}>Post Listing</TextButton>
+                        <TouchableOpacity onPress={this.selectLocation}>
+                            <View style={styles.row}>
+                                <Text style={styles.title}>Location</Text>
+                                <Text style={styles.value}>Select...</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <Text style={styles.addPhotoTitle}>Add Photos</Text>
+                        <ScrollView style={styles.photoList} horizontal={true}>
+                            {photos}
+                            <TouchableOpacity onPress={this.onPressAddPhotoBtn.bind(this)}>
+                                <View style={[styles.addButton, styles.photo]}>
+                                    <Icon name='camera' size={30} color='white' />
+                                </View>
+                            </TouchableOpacity>
+                        </ScrollView>
+                        
 
-                </View>
-                {this.state.filterModalVisible &&
-                    <FilterViewModal
-                        value={this.state.filter}
-                        onCancel={this.onSelectFilterCancel}
-                        onDone={this.onSelectFilterDone}></FilterViewModal>
-                }
-                {this.state.locationModalVisible &&
-                    <SelectLocationModal
-                        location={this.state.location}
-                        onCancel={this.onSelectLocationCancel}
-                        onDone={this.onSelectLocationDone}></SelectLocationModal>
-                }
-            </ScrollView>
+                    </View>
+                    {this.state.filterModalVisible &&
+                        <FilterViewModal
+                            value={this.state.filter}
+                            onCancel={this.onSelectFilterCancel}
+                            onDone={this.onSelectFilterDone}></FilterViewModal>
+                    }
+                    {this.state.locationModalVisible &&
+                        <SelectLocationModal
+                            location={this.state.location}
+                            onCancel={this.onSelectLocationCancel}
+                            onDone={this.onSelectLocationDone}></SelectLocationModal>
+                    }
+                </ScrollView>
+                <TextButton containerStyle={styles.addButtonContainer} onPress={this.onPost} style={styles.addButtonText}>Post Listing</TextButton>
+            </Modal>
         );
     }
 }
@@ -288,7 +300,11 @@ class PostScreen extends React.Component {
 const styles = StyleSheet.create({
     body: {
         flex: 1,
+        backgroundColor: AppStyles.color.white,
+    },
+    divider: {
         backgroundColor: AppStyles.color.background,
+        height: 10,
     },
     container: {
         justifyContent: 'center',
@@ -298,7 +314,9 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: AppStyles.color.grey,
     },
-
+    rightButton: {
+        marginRight: 10,
+    },
     sectionTitle: {
         textAlign: 'left',
         alignItems: 'center',
@@ -327,7 +345,7 @@ const styles = StyleSheet.create({
         flex: 1,
         borderRadius: 5,
         borderColor: AppStyles.color.grey,
-        borderWidth: 1,
+        borderWidth: 0.5,
         height: 40,
         textAlign: 'right',
         fontFamily: AppStyles.fontName.main,
@@ -407,4 +425,4 @@ const mapStateToProps = state => ({
     user: state.auth.user,
 });
 
-export default connect(mapStateToProps)(PostScreen);
+export default connect(mapStateToProps)(PostModal);

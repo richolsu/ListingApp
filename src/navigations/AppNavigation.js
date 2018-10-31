@@ -9,10 +9,8 @@ import DetailScreen from '../screens/DetailScreen';
 import FilterScreen from '../screens/FilterScreen';
 import ListingScreen from '../screens/ListingScreen';
 import LoginScreen from '../screens/LoginScreen';
-import PostScreen from '../screens/PostScreen';
 import ReviewScreen from '../screens/ReviewScreen';
 import MapScreen from '../screens/MapScreen';
-import SelectLocationScreen from '../screens/SelectLocationScreen';
 import SavedListingScreen from '../screens/SavedListingScreen';
 import SearchScreen from '../screens/SearchScreen';
 import SignupScreen from '../screens/SignupScreen';
@@ -47,13 +45,10 @@ const LoginStack = createStackNavigator({
 
 const HomeStack = createStackNavigator({
     Home: { screen: HomeScreen },
-    Filter: { screen: FilterScreen },
     Listing: { screen: ListingScreen },
     Detail: { screen: DetailScreen },
-    Post: { screen: PostScreen },
     Review: { screen: ReviewScreen },
     Map: { screen: MapScreen },
-    SelectLocation: { screen: SelectLocationScreen}
 }, {
         initialRouteName: 'Home',
         headerMode: 'float',
