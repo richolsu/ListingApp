@@ -6,7 +6,6 @@ import { createReactNavigationReduxMiddleware, reduxifyNavigator } from 'react-n
 import HomeScreen from '../screens/HomeScreen';
 import CategoryScreen from '../screens/CategoryScreen';
 import DetailScreen from '../screens/DetailScreen';
-import FilterScreen from '../screens/FilterScreen';
 import ListingScreen from '../screens/ListingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import ReviewScreen from '../screens/ReviewScreen';

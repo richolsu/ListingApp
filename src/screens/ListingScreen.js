@@ -6,6 +6,8 @@ import { AppIcon, AppStyles, ListStyle, HeaderButtonStyle } from '../AppStyles';
 import HeaderButton from '../components/HeaderButton';
 import { Configuration } from '../Configuration';
 import MapView, { Marker } from 'react-native-maps';
+import FilterViewModal from '../components/FilterViewModal';
+
 
 class ListingScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
@@ -25,26 +27,32 @@ class ListingScreen extends React.Component {
         super(props);
 
         const { navigation } = props;
-        const item = navigation.getParam('item');
-
-
-        this.ref = firebase.firestore().collection('Listings').where('category_id', '==', item.id);
-        this.unsubscribe = null;
+        const item = navigation.getParam('item');        
 
         this.state = {
             category: item,
             filter: {},
             data: [],
             mapMode: false,
+            filterModalVisible: false,
         };
-    }
 
-    onSelectFilterDone = (filter) => {
-        this.setState(filter);
+        this.ref = firebase.firestore().collection('Listings').where('category_id', '==', this.state.category.id);
+        this.unsubscribe = null;
     }
 
     onSelectFilter = () => {
-        this.props.navigation.navigate('Filter', { filter: this.state.filter, onSelectFilterDone: this.onSelectFilterDone });
+        this.setState({ filterModalVisible: true });
+    }
+
+    onSelectFilterCancel = () => {
+        this.setState({ filterModalVisible: false });
+    }
+
+    onSelectFilterDone = (filter) => {
+        this.setState({ filter: filter });
+        this.setState({ filterModalVisible: false });
+        this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
     }
 
     onChangeMode = () => {
@@ -57,12 +65,24 @@ class ListingScreen extends React.Component {
 
     onCollectionUpdate = (querySnapshot) => {
         const data = [];
-        querySnapshot.forEach((doc) => {
-        });
-
         let max_latitude = -400, min_latitude = 400, max_longitude = -400, min_logitude = 400;
+
+        const filter = this.state.filter;
         querySnapshot.forEach((doc) => {
             const listing = doc.data();
+            console.log(listing.mapping);
+            let matched = true;
+            Object.keys(filter).forEach(function (key) {
+                if (filter[key] != 'Any' && filter[key] != 'All' && listing.mapping[key] != filter[key]) {
+                    matched = false;
+                }
+            });
+            
+            console.log("matched=" + matched);
+
+            if (!matched)
+                return;
+
             if (max_latitude < listing.coordinate._latitude)
                 max_latitude = listing.coordinate._latitude;
             if (min_latitude > listing.coordinate._latitude)
@@ -151,26 +171,32 @@ class ListingScreen extends React.Component {
 
         return (
             <View>
-                { this.state.mapMode && 
-                <MapView style={styles.mapView}
-                    region={{
-                        latitude: this.state.latitude,
-                        longitude: this.state.longitude,
-                        latitudeDelta: this.state.latitudeDelta,
-                        longitudeDelta: this.state.longitudeDelta,
-                    }}
-                >
-                    {markerArr}
-                </MapView>
+                {this.state.mapMode &&
+                    <MapView style={styles.mapView}
+                        region={{
+                            latitude: this.state.latitude,
+                            longitude: this.state.longitude,
+                            latitudeDelta: this.state.latitudeDelta,
+                            longitudeDelta: this.state.longitudeDelta,
+                        }}
+                    >
+                        {markerArr}
+                    </MapView>
                 }
-                { !this.state.mapMode && 
-                <FlatList
-                    data={this.state.data}
-                    renderItem={this.renderItem}
-                    keyExtractor={item => `${item.id}`}
-                    initialNumToRender={5}
-                    refreshing={this.state.refreshing}
-                />
+                {!this.state.mapMode &&
+                    <FlatList
+                        data={this.state.data}
+                        renderItem={this.renderItem}
+                        keyExtractor={item => `${item.id}`}
+                        initialNumToRender={5}
+                        refreshing={this.state.refreshing}
+                    />
+                }
+                {this.state.filterModalVisible &&
+                    <FilterViewModal
+                        value={this.state.filter}
+                        onCancel={this.onSelectFilterCancel}
+                        onDone={this.onSelectFilterDone}></FilterViewModal>
                 }
 
             </View>
