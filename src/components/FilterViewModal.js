@@ -5,7 +5,7 @@ import ModalSelector from 'react-native-modal-selector';
 import { AppStyles, ModalHeaderStyle, ModalSelectorStyle, HeaderButtonStyle } from '../AppStyles';
 import TextButton from 'react-native-button';
 
-class FilterView extends React.Component {
+class FilterViewModal extends React.Component {
 
     constructor(props) {
         super(props);
@@ -17,6 +17,7 @@ class FilterView extends React.Component {
             data: [],
             filter: this.props.value,
         };
+        console.log(this.state);
 
     }
 
@@ -46,11 +47,12 @@ class FilterView extends React.Component {
     }
 
     onDone = () => {
-        console.log(this.state.filter);
-        console.log(this.props);
         this.props.onDone(this.state.filter);
     }
 
+    onCancel = () => {
+        this.props.onCancel();
+    }
 
     renderItem = (item) => {
         let filter_key = item.name;
@@ -60,6 +62,10 @@ class FilterView extends React.Component {
         ));
         data.unshift({ key: 'section', label: item.name, section: true });
 
+        let initValue = item.options[0];
+        if (this.state.filter[filter_key]) {
+            initValue = this.state.filter[filter_key];
+        }
 
         return (
             <ModalSelector
@@ -73,11 +79,11 @@ class FilterView extends React.Component {
                 selectedItemTextStyle={ModalSelectorStyle.selectedItemTextStyle}
                 backdropPressToClose={true}
                 cancelText={'Cancel'}
-                initValue={item.options[0]}
+                initValue={initValue}
                 onChange={(option) => { this.setState({ filter: { ...this.state.filter, [filter_key]: option.key } }) }}>
                 <View style={styles.container}>
                     <Text style={styles.title}>{item.name}</Text>
-                    <Text style={styles.value}>{this.state.filter[filter_key]}</Text>
+                    <Text style={styles.value}>{initValue}</Text>
                 </View>
             </ModalSelector>
         );
@@ -89,14 +95,18 @@ class FilterView extends React.Component {
         })
 
         return (
-
-            <ScrollView style={styles.body}>
-                <View style={ModalHeaderStyle.bar}>
-                    <Text style={ModalHeaderStyle.title}>Filters</Text>
-                    <TextButton style={ModalHeaderStyle.rightButton} onPress={this.onDone} >Done</TextButton>
-                </View>
-                {selectorArray}
-            </ScrollView>
+            <Modal
+                animationType="slide"
+                transparent={false}
+                onRequestClose={this.onCancel}>
+                <ScrollView style={styles.body}>
+                    <View style={ModalHeaderStyle.bar}>
+                        <Text style={ModalHeaderStyle.title}>Filters</Text>
+                        <TextButton style={ModalHeaderStyle.rightButton} onPress={this.onDone} >Done</TextButton>
+                    </View>
+                    {selectorArray}
+                </ScrollView>
+            </Modal>
 
         );
     }
@@ -133,4 +143,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default FilterView;
+export default FilterViewModal;

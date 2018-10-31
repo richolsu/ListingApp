@@ -9,7 +9,8 @@ import { Configuration } from '../Configuration';
 import { connect } from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import FilterView from '../components/FilterView';
+import FilterViewModal from '../components/FilterViewModal';
+import SelectLocationModal from '../components/SelectLocationModal';
 
 class PostScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
@@ -41,6 +42,7 @@ class PostScreen extends React.Component {
             textInputValue: '',
             filter: {},
             filterModalVisible: false,
+            locationModalVisible: false,
         };
     }
 
@@ -68,20 +70,29 @@ class PostScreen extends React.Component {
     }
 
     selectLocation = () => {
-        this.props.navigation.navigate('SelectLocation', { location: this.state.location, onSelectLocationDone: this.onSelectLocationDone });
-    }
-
-    selectFilter = () => {
-        this.setState({filterModalVisible: true});
+        this.setState({ locationModalVisible: true });
     }
 
     onSelectLocationDone = (location) => {
         this.setState({ location: location });
+        this.setState({ locationModalVisible: false });
+    }
+
+    onSelectLocationCancel = () => {
+        this.setState({ locationModalVisible: false });
+    }
+
+    selectFilter = () => {
+        this.setState({ filterModalVisible: true });
+    }
+
+    onSelectFilterCancel = () => {
+        this.setState({ filterModalVisible: false });
     }
 
     onSelectFilterDone = (filter) => {
-        this.setState({filterModalVisible: false});
-        this.setState({filter:filter});
+        this.setState({ filter: filter });
+        this.setState({ filterModalVisible: false });
     }
     onPressAddPhotoBtn = () => {
         // More info on all the options is below in the API Reference... just some common use cases shown here
@@ -257,15 +268,18 @@ class PostScreen extends React.Component {
                     <TextButton containerStyle={styles.addButtonContainer} onPress={this.onPost} style={styles.addButtonText}>Post Listing</TextButton>
 
                 </View>
-                <Modal
-                    animationType="slide"
-                    transparent={false}
-                    visible={this.state.filterModalVisible}
-                    onRequestClose={() => {
-                        this.setState({filterModalVisible: false});
-                    }}>
-                    <FilterView visible={this.state.filterModalVisible} value={this.state.filter} onDone={this.onSelectFilterDone}></FilterView>
-                </Modal>
+                {this.state.filterModalVisible &&
+                    <FilterViewModal
+                        value={this.state.filter}
+                        onCancel={this.onSelectFilterCancel}
+                        onDone={this.onSelectFilterDone}></FilterViewModal>
+                }
+                {this.state.locationModalVisible &&
+                    <SelectLocationModal
+                        location={this.state.location}
+                        onCancel={this.onSelectLocationCancel}
+                        onDone={this.onSelectLocationDone}></SelectLocationModal>
+                }
             </ScrollView>
         );
     }

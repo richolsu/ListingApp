@@ -241,6 +241,7 @@ export const ModalHeaderStyle = {
   rightButton: {
     top: 0,
     right: 0,
+    backgroundColor: 'transparent',
     alignSelf: 'flex-end',
     color: AppStyles.color.tint,
     fontWeight: 'normal',
