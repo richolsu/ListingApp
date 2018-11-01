@@ -17,7 +17,6 @@ class FilterViewModal extends React.Component {
             data: [],
             filter: this.props.value,
         };
-        console.log(this.state);
 
     }
 

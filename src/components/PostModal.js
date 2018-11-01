@@ -40,10 +40,13 @@ class PostModal extends React.Component {
             price: '1000',
             textInputValue: '',
             filter: {},
-            address: 'Select...',
+            filterValue: 'Select...',
+            address: 'Checking...',
             filterModalVisible: false,
             locationModalVisible: false,
         };
+
+        this.setFilterString(this.state.filter);
     }
 
 
@@ -64,7 +67,29 @@ class PostModal extends React.Component {
         Geocoder.from(location.latitude, location.longitude).then(json => {
             var addressComponent = json.results[0].address_components[0];
             this.setState({address: addressComponent});
-        }).catch(error => console.log(error));
+        }).catch(error => {
+            console.log(error);
+            this.setState({address: "Unknown"});
+        });
+    }
+
+    setFilterString = (filter) => {
+        let filterValue = '';
+        Object.keys(filter).forEach(function (key) {
+            if (filter[key] != 'Any' && filter[key] != 'All') {
+                filterValue += " " + filter[key];
+            }
+        });
+
+        if (filterValue == '') {
+            if (Object.keys(filter).length > 0) {
+                filterValue = "Any";
+            }else {
+                filterValue = 'Select...';
+            }            
+        }
+
+        this.setState({filterValue: filterValue});
     }
 
     onSelectLocationDone = (location) => {
@@ -88,6 +113,7 @@ class PostModal extends React.Component {
     onSelectFilterDone = (filter) => {
         this.setState({ filter: filter });
         this.setState({ filterModalVisible: false });
+        this.setFilterString(filter);
     }
 
     onPressAddPhotoBtn = () => {
@@ -154,7 +180,6 @@ class PostModal extends React.Component {
         uploadPromiseArray = [];
         this.state.localPhotos.forEach((uri) => {
             uploadPromiseArray.push(new Promise((resolve, reject) => {
-                console.log("upload image")
                 let filename = uri.substring(uri.lastIndexOf('/') + 1);
                 const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
                 firebase.storage().ref(filename).putFile(uploadUri).then(function (snapshot) {
@@ -165,7 +190,6 @@ class PostModal extends React.Component {
         });
 
         Promise.all(uploadPromiseArray).then(values => {
-            console.log("Post listing");
             firebase.firestore().collection('Listings').add({
                 user_id: this.props.user.id,
                 category_id: this.state.category.id,
@@ -278,7 +302,7 @@ class PostModal extends React.Component {
                         <TouchableOpacity onPress={this.selectFilter}>
                             <View style={styles.row}>
                                 <Text style={styles.title}>Filters</Text>
-                                <Text style={styles.value}>Select...</Text>
+                                <Text style={styles.value}>{this.state.filterValue}</Text>
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={this.selectLocation}>
