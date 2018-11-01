@@ -22,6 +22,7 @@ class DetailsScreen extends React.Component {
         headerRight:
             <View style={HeaderButtonStyle.multi}>
                 <HeaderButton
+                    style={{ tintColor: AppStyles.color.tint }}
                     icon={AppIcon.images.review}
                     onPress={() => { navigation.state.params.onPressReview() }} />
                 <HeaderButton
