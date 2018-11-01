@@ -15,9 +15,11 @@ class ListingScreen extends React.Component {
         headerRight:
             <View style={HeaderButtonStyle.multi}>
                 <HeaderButton
+                    style={{ tintColor: AppStyles.color.tint }}
                     icon={navigation.state.params.mapMode ? AppIcon.images.list : AppIcon.images.map}
                     onPress={() => { navigation.state.params.onChangeMode() }} />
                 <HeaderButton
+                    style={{ tintColor: AppStyles.color.tint }}
                     icon={AppIcon.images.filters}
                     onPress={() => { navigation.state.params.onSelectFilter() }} />
             </View>
@@ -27,7 +29,7 @@ class ListingScreen extends React.Component {
         super(props);
 
         const { navigation } = props;
-        const item = navigation.getParam('item');        
+        const item = navigation.getParam('item');
 
         this.state = {
             category: item,
@@ -77,7 +79,7 @@ class ListingScreen extends React.Component {
                     matched = false;
                 }
             });
-            
+
             console.log("matched=" + matched);
 
             if (!matched)
