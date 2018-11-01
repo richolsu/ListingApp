@@ -8,12 +8,13 @@ import FastImage from 'react-native-fast-image'
 import SavedButton from '../components/SavedButton';
 import { connect } from 'react-redux';
 import { Configuration } from '../Configuration';
+import PostModal from '../components/PostModal';
 
 class HomeScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         title: 'Home',
-        headerLeft: <HeaderButton icon={AppIcon.images.map} onPress={() => {navigation.navigate('Map')} } />,
-        headerRight: <HeaderButton icon={AppIcon.images.compose} onPress={() => { navigation.navigate('Post') }} />,
+        headerLeft: <HeaderButton icon={AppIcon.images.map} onPress={() => { navigation.navigate('Map') }} />,
+        headerRight: <HeaderButton icon={AppIcon.images.compose} onPress={() => { navigation.state.params.onPressPost() }} />,
     });
 
     constructor(props) {
@@ -36,11 +37,9 @@ class HomeScreen extends React.Component {
             allListings: [],
             selectedCategoryName: '',
             savedListings: [],
-            loading: false,
-            error: null,
             filter: {},
             showedAll: false,
-            refreshing: false
+            postModalVisible: false
         };
     }
 
@@ -108,7 +107,8 @@ class HomeScreen extends React.Component {
         this.savedListingsUnsubscribe = this.savedListingsRef.onSnapshot(this.onSavedListingsCollectionUpdate);
 
         this.props.navigation.setParams({
-            onPressFilter: this.onPressFilter
+            onPressFilter: this.onPressFilter,
+            onPressPost: this.onPressPost
         });
     }
 
@@ -118,6 +118,12 @@ class HomeScreen extends React.Component {
         this.savedListingsUnsubscribe();
     }
 
+    onPressPost = () => {
+        this.setState({ postModalVisible: true });
+    }
+    onPostCancel = () => {
+        this.setState({ postModalVisible: false });
+    }
     onPressCategoryItem = (item) => {
         this.props.navigation.navigate('Listing', { item: item });
     }
@@ -132,14 +138,6 @@ class HomeScreen extends React.Component {
         this.props.navigation.navigate('Detail', { item: item });
     }
 
-    onSelectFilterDone = (filter) => {
-        console.log(filter);
-        this.setState(filter);
-    }
-
-    onPressFilter = () => {
-        this.props.navigation.navigate('Filter', { filter: this.state.filter, onSelectFilterDone: this.onSelectFilterDone });
-    }
     onShowAll = () => {
         this.setState({
             showedAll: true,
@@ -194,7 +192,7 @@ class HomeScreen extends React.Component {
                 <View style={TwoColumnListStyle.listingItemContainer}>
                     <FastImage style={TwoColumnListStyle.listingPhoto} source={{ uri: item.cover_photo }} />
                     <SavedButton style={TwoColumnListStyle.savedIcon} onPress={() => this.onPressSavedIcon(item)} item={item} />
-                    <Text style={{...TwoColumnListStyle.listingName, minHeight: 40}}>{item.name}</Text>
+                    <Text style={{ ...TwoColumnListStyle.listingName, minHeight: 40 }}>{item.name}</Text>
                     <Text style={TwoColumnListStyle.listingPlace}>{item.place}</Text>
                 </View>
             </TouchableOpacity>
@@ -236,6 +234,9 @@ class HomeScreen extends React.Component {
                         keyExtractor={item => `${item.id}`}
                     />
                 </View>
+                {this.state.postModalVisible &&
+                    <PostModal onCancel={this.onPostCancel}></PostModal>
+                }
             </ScrollView>
         );
     }
@@ -278,7 +279,7 @@ const styles = StyleSheet.create({
         color: AppStyles.color.categoryTitle,
         margin: 10,
     },
-    
+
 });
 
 const mapStateToProps = state => ({

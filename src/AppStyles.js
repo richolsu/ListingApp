@@ -117,7 +117,7 @@ export const ListStyle = StyleSheet.create({
   time: {
     color: AppStyles.color.description,
     fontFamily: AppStyles.fontName.main,
-    flex:1,
+    flex: 1,
     textAlignVertical: 'bottom',
   },
   place: {
@@ -222,4 +222,29 @@ export const ModalSelectorStyle = {
     color: AppStyles.color.blue,
     fontFamily: AppStyles.fontName.main,
   }
+}
+
+export const ModalHeaderStyle = {
+  bar: {
+    height: 50,
+    justifyContent: 'center',
+  },
+  title: {
+    position: 'absolute',
+    textAlign: 'center',
+    width: '100%',
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: 'black',
+    fontFamily: AppStyles.fontName.main,
+  },
+  rightButton: {
+    top: 0,
+    right: 0,
+    backgroundColor: 'transparent',
+    alignSelf: 'flex-end',
+    color: AppStyles.color.tint,
+    fontWeight: 'normal',
+    fontFamily: AppStyles.fontName.main,
+  },
 }

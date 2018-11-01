@@ -1,39 +1,24 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Modal, ScrollView, StyleSheet, Text, View } from "react-native";
 import firebase from 'react-native-firebase';
 import ModalSelector from 'react-native-modal-selector';
-import { AppStyles, ModalSelectorStyle, HeaderButtonStyle } from '../AppStyles';
+import { AppStyles, ModalHeaderStyle, ModalSelectorStyle, HeaderButtonStyle } from '../AppStyles';
 import TextButton from 'react-native-button';
 
-class FilterScreen extends React.Component {
-    static navigationOptions = ({ navigation }) => ({
-        title: 'Filters',
-        headerRight: (
-            <TextButton
-                onPress={navigation.state.params.onDone}
-                style={HeaderButtonStyle.rightButton}
-            >Done</TextButton>),
-    });
+class FilterViewModal extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.ref = firebase.firestore().collection('listing_filters');
         this.unsubscribe = null;
-        console.log(props.navigation.state.params);
+
         this.state = {
-            loading: false,
             data: [],
-            page: 1,
-            seed: 1,
-            textInputValue: '',
-            error: null,
-            refreshing: false,
-            language: 'java',
-            filter: props.navigation.state.params.filter,
-            isModalVisible: false
+            filter: this.props.value,
         };
-        console.log(this.state.filter);
+        console.log(this.state);
+
     }
 
     onCollectionUpdate = (querySnapshot) => {
@@ -55,9 +40,6 @@ class FilterScreen extends React.Component {
 
     componentDidMount() {
         this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
-        this.props.navigation.setParams({
-            onDone: this.onDone
-        });
     }
 
     componentWillUnmount() {
@@ -65,11 +47,12 @@ class FilterScreen extends React.Component {
     }
 
     onDone = () => {
-        console.log(this.state.filter);
-        this.props.navigation.state.params.onSelectFilterDone({ filter: this.state.filter })
-        this.props.navigation.goBack();
+        this.props.onDone(this.state.filter);
     }
 
+    onCancel = () => {
+        this.props.onCancel();
+    }
 
     renderItem = (item) => {
         let filter_key = item.name;
@@ -79,6 +62,10 @@ class FilterScreen extends React.Component {
         ));
         data.unshift({ key: 'section', label: item.name, section: true });
 
+        let initValue = item.options[0];
+        if (this.state.filter[filter_key]) {
+            initValue = this.state.filter[filter_key];
+        }
 
         return (
             <ModalSelector
@@ -92,11 +79,11 @@ class FilterScreen extends React.Component {
                 selectedItemTextStyle={ModalSelectorStyle.selectedItemTextStyle}
                 backdropPressToClose={true}
                 cancelText={'Cancel'}
-                initValue={item.options[0]}
+                initValue={initValue}
                 onChange={(option) => { this.setState({ filter: { ...this.state.filter, [filter_key]: option.key } }) }}>
                 <View style={styles.container}>
                     <Text style={styles.title}>{item.name}</Text>
-                    <Text style={styles.value}>{this.state.filter[filter_key]}</Text>
+                    <Text style={styles.value}>{initValue}</Text>
                 </View>
             </ModalSelector>
         );
@@ -108,9 +95,19 @@ class FilterScreen extends React.Component {
         })
 
         return (
-            <ScrollView style={styles.body}>
-                {selectorArray}
-            </ScrollView>
+            <Modal
+                animationType="slide"
+                transparent={false}
+                onRequestClose={this.onCancel}>
+                <ScrollView style={styles.body}>
+                    <View style={ModalHeaderStyle.bar}>
+                        <Text style={ModalHeaderStyle.title}>Filters</Text>
+                        <TextButton style={ModalHeaderStyle.rightButton} onPress={this.onDone} >Done</TextButton>
+                    </View>
+                    {selectorArray}
+                </ScrollView>
+            </Modal>
+
         );
     }
 }
@@ -146,4 +143,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default FilterScreen;
+export default FilterViewModal;
