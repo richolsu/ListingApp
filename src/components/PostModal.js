@@ -19,15 +19,18 @@ class PostModal extends React.Component {
         super(props);
 
         Geocoder.init('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'); 
+        
+        const categories = this.props.categories;
+        let category = {}
 
-        this.categoryRef = firebase.firestore().collection('Categories').orderBy('order', 'asc');
-        this.unsubscribeCategory = null;
+        if (categories.length > 0)
+            category = categories[0];
 
         this.state = {
-            categories: [],
+            categories: categories,
+            category: category,
             title: '',
             description: '',
-            category: {},
             location: {
                 latitude: Configuration.map.origin.latitude,
                 longitude: Configuration.map.origin.longitude,
@@ -44,32 +47,13 @@ class PostModal extends React.Component {
     }
 
 
-    onCategoryUpdate = (querySnapshot) => {
-        const data = [];
-        querySnapshot.forEach((doc) => {
-            const category = doc.data();
-            data.push({ ...category, id: doc.id });
-        });
-
-        this.setState({
-            categories: data,
-            category: data[0],
-            loading: false,
-        });
-    }
-
     componentDidMount() {
-        this.unsubscribeCategory = this.categoryRef.onSnapshot(this.onCategoryUpdate);
         navigator.geolocation.getCurrentPosition((position) => {
             this.setState({ location: position.coords });
             this.onChangeLocation(position.coords);
         }, 
         (error) => alert(error.message),
         {enableHighAccuracy: false, timeout:1000});
-    }
-
-    componentWillUnmount() {
-        this.unsubscribeCategory();
     }
 
     selectLocation = () => {

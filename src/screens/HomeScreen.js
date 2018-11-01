@@ -37,7 +37,6 @@ class HomeScreen extends React.Component {
             allListings: [],
             selectedCategoryName: '',
             savedListings: [],
-            filter: {},
             showedAll: false,
             postModalVisible: false
         };
@@ -107,7 +106,6 @@ class HomeScreen extends React.Component {
         this.savedListingsUnsubscribe = this.savedListingsRef.onSnapshot(this.onSavedListingsCollectionUpdate);
 
         this.props.navigation.setParams({
-            onPressFilter: this.onPressFilter,
             onPressPost: this.onPressPost
         });
     }
@@ -235,7 +233,7 @@ class HomeScreen extends React.Component {
                     />
                 </View>
                 {this.state.postModalVisible &&
-                    <PostModal onCancel={this.onPostCancel}></PostModal>
+                    <PostModal categories={this.state.categories} onCancel={this.onPostCancel}></PostModal>
                 }
             </ScrollView>
         );
