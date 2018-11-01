@@ -55,11 +55,15 @@ class PostModal extends React.Component {
     }
 
     componentDidMount() {
-        this.unsubscribeCategory = this.categoryRef.onSnapshot(this.onCategoryUpdate)
+        this.unsubscribeCategory = this.categoryRef.onSnapshot(this.onCategoryUpdate);
+        this.watchID = navigator.geolocation.watchPosition((position) => {
+            this.setState({location: position.coords});
+        });
     }
 
     componentWillUnmount() {
         this.unsubscribeCategory();
+        navigator.geolocation.clearWatch(this.watchID);
     }
 
     selectLocation = () => {
@@ -199,9 +203,9 @@ class PostModal extends React.Component {
 
     onActionDone = (index) => {
         if (index == 0) {
-            var array = [...this.state.localPhotos]; 
+            var array = [...this.state.localPhotos];
             array.splice(this.state.selectedPhotoIndex, 1);
-            this.setState({localPhotos: array});
+            this.setState({ localPhotos: array });
         }
     }
 
@@ -212,7 +216,7 @@ class PostModal extends React.Component {
         categoryData.unshift({ key: 'section', label: 'Category', section: true });
 
         photos = this.state.localPhotos.map((photo, index) => (
-            <TouchableOpacity onPress={() => {this.showActionSheet(index)}}>
+            <TouchableOpacity onPress={() => { this.showActionSheet(index) }}>
                 <FastImage style={styles.photo} source={{ uri: photo }} />
             </TouchableOpacity>
         ));
