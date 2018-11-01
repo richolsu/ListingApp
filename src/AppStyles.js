@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { Platform, StyleSheet, Dimensions } from 'react-native';
 import { Configuration } from './Configuration';
 
 const { width, height } = Dimensions.get('window');
@@ -228,6 +228,7 @@ export const ModalHeaderStyle = {
   bar: {
     height: 50,
     justifyContent: 'center',
+    marginTop: Platform.OS === 'ios' ? 30 : 0,
   },
   title: {
     position: 'absolute',
