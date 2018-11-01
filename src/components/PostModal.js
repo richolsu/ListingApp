@@ -12,10 +12,13 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import FilterViewModal from '../components/FilterViewModal';
 import SelectLocationModal from '../components/SelectLocationModal';
 import ActionSheet from 'react-native-actionsheet'
+import Geocoder from 'react-native-geocoding';
 
 class PostModal extends React.Component {
     constructor(props) {
         super(props);
+
+        Geocoder.init('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'); 
 
         this.categoryRef = firebase.firestore().collection('Categories').orderBy('order', 'asc');
         this.unsubscribeCategory = null;
@@ -34,6 +37,7 @@ class PostModal extends React.Component {
             price: '1000',
             textInputValue: '',
             filter: {},
+            address: 'Select...',
             filterModalVisible: false,
             locationModalVisible: false,
         };
@@ -57,7 +61,8 @@ class PostModal extends React.Component {
     componentDidMount() {
         this.unsubscribeCategory = this.categoryRef.onSnapshot(this.onCategoryUpdate);
         this.watchID = navigator.geolocation.watchPosition((position) => {
-            this.setState({location: position.coords});
+            this.setState({ location: position.coords });
+            this.onChangeLocation(position.coords);
         });
     }
 
@@ -70,9 +75,17 @@ class PostModal extends React.Component {
         this.setState({ locationModalVisible: true });
     }
 
+    onChangeLocation = (location) => {
+        Geocoder.from(location.latitude, location.longitude).then(json => {
+            var addressComponent = json.results[0].address_components[0];
+            this.setState({address: addressComponent});
+        }).catch(error => console.log(error));
+    }
+
     onSelectLocationDone = (location) => {
         this.setState({ location: location });
         this.setState({ locationModalVisible: false });
+        this.onChangeLocation(location);        
     }
 
     onSelectLocationCancel = () => {
@@ -286,7 +299,7 @@ class PostModal extends React.Component {
                         <TouchableOpacity onPress={this.selectLocation}>
                             <View style={styles.row}>
                                 <Text style={styles.title}>Location</Text>
-                                <Text style={styles.value}>Select...</Text>
+                                <Text style={styles.value}>{this.state.address}</Text>
                             </View>
                         </TouchableOpacity>
                         <Text style={styles.addPhotoTitle}>Add Photos</Text>
