@@ -11,6 +11,7 @@ import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FilterViewModal from '../components/FilterViewModal';
 import SelectLocationModal from '../components/SelectLocationModal';
+import ActionSheet from 'react-native-actionsheet'
 
 class PostModal extends React.Component {
     constructor(props) {
@@ -188,6 +189,22 @@ class PostModal extends React.Component {
         });
 
     }
+
+    showActionSheet = (index) => {
+        this.setState({
+            selectedPhotoIndex: index
+        })
+        this.ActionSheet.show();
+    }
+
+    onActionDone = (index) => {
+        if (index == 0) {
+            var array = [...this.state.localPhotos]; 
+            array.splice(this.state.selectedPhotoIndex, 1);
+            this.setState({localPhotos: array});
+        }
+    }
+
     render() {
         categoryData = this.state.categories.map((category, index) => (
             { key: category.id, label: category.name }
@@ -195,7 +212,9 @@ class PostModal extends React.Component {
         categoryData.unshift({ key: 'section', label: 'Category', section: true });
 
         photos = this.state.localPhotos.map((photo, index) => (
-            <FastImage style={styles.photo} source={{ uri: photo }} />
+            <TouchableOpacity onPress={() => {this.showActionSheet(index)}}>
+                <FastImage style={styles.photo} source={{ uri: photo }} />
+            </TouchableOpacity>
         ));
         return (
             <Modal
@@ -211,7 +230,7 @@ class PostModal extends React.Component {
                         <Text style={styles.sectionTitle}>Title</Text>
                         <TextInput style={styles.input} value={this.state.title} onChangeText={(text) => this.setState({ title: text })} placeholder="Start typing" placeholderTextColor={AppStyles.color.grey} underlineColorAndroid='transparent' />
                     </View>
-                    <View style={styles.divider}/>
+                    <View style={styles.divider} />
                     <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Description</Text>
                         <TextInput
@@ -224,7 +243,7 @@ class PostModal extends React.Component {
                             placeholderTextColor={AppStyles.color.grey}
                             underlineColorAndroid='transparent' />
                     </View>
-                    <View style={styles.divider}/>
+                    <View style={styles.divider} />
                     <View style={styles.section}>
                         <View style={styles.row}>
                             <Text style={styles.title}>Price</Text>
@@ -275,7 +294,7 @@ class PostModal extends React.Component {
                                 </View>
                             </TouchableOpacity>
                         </ScrollView>
-                        
+
 
                     </View>
                     {this.state.filterModalVisible &&
@@ -292,8 +311,25 @@ class PostModal extends React.Component {
                     }
                 </ScrollView>
                 <TextButton containerStyle={styles.addButtonContainer} onPress={this.onPost} style={styles.addButtonText}>Post Listing</TextButton>
+                <ActionSheet
+                    ref={o => this.ActionSheet = o}
+                    title={'Confirm to delete?'}
+                    options={['Confirm', 'Cancel']}
+                    cancelButtonIndex={1}
+                    destructiveButtonIndex={0}
+                    onPress={(index) => { this.onActionDone(index) }}
+                />
             </Modal>
         );
+    }
+}
+const actionSheetStyles = {
+    titleBox: {
+        backgroundColor: 'pink'
+    },
+    titleText: {
+        fontSize: 16,
+        color: '#000fff'
     }
 }
 
