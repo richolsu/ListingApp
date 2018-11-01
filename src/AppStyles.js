@@ -12,7 +12,7 @@ export const AppStyles = {
     title: '#464646',
     subtitle: '#545454',
     categoryTitle: '#161616',
-    tint: '#ff364d',
+    tint: '#ff5a66',
     description: '#bbbbbb',
     filterTitle: '#8a8a8a',
     starRating: '#2bdf85',
@@ -227,6 +227,7 @@ export const ModalSelectorStyle = {
 export const ModalHeaderStyle = {
   bar: {
     height: 50,
+    marginTop: Platform.OS === 'ios' ? 30 : 0,
     justifyContent: 'center',
     marginTop: Platform.OS === 'ios' ? 30 : 0,
   },
