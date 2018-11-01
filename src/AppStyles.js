@@ -229,7 +229,6 @@ export const ModalHeaderStyle = {
     height: 50,
     marginTop: Platform.OS === 'ios' ? 30 : 0,
     justifyContent: 'center',
-    marginTop: Platform.OS === 'ios' ? 30 : 0,
   },
   title: {
     position: 'absolute',
