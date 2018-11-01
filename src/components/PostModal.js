@@ -60,15 +60,16 @@ class PostModal extends React.Component {
 
     componentDidMount() {
         this.unsubscribeCategory = this.categoryRef.onSnapshot(this.onCategoryUpdate);
-        this.watchID = navigator.geolocation.watchPosition((position) => {
+        navigator.geolocation.getCurrentPosition((position) => {
             this.setState({ location: position.coords });
             this.onChangeLocation(position.coords);
-        });
+        }, 
+        (error) => alert(error.message),
+        {enableHighAccuracy: false, timeout:1000});
     }
 
     componentWillUnmount() {
         this.unsubscribeCategory();
-        navigator.geolocation.clearWatch(this.watchID);
     }
 
     selectLocation = () => {
