@@ -32,9 +32,8 @@ class SavedListingScreen extends React.Component {
             const listing = doc.data();
             if (this.state.savedListings.findIndex(k => k == doc.id) >= 0) {
                 listing.saved = true;
-                data.push({ ...listing, id: doc.id, starCount: 3 });
+                data.push({ ...listing, id: doc.id });
             }
-
         });
 
         this.setState({

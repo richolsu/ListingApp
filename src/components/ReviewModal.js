@@ -43,7 +43,27 @@ class ReviewModal extends React.Component {
                     content: content,
                     review_time: firebase.firestore.FieldValue.serverTimestamp(),
                 }).then(function (docRef) {
-                    onDone();
+                    firebase.firestore().collection('Reviews').where('listing_id', '==', data.id).get().then(function (reviewQuerySnapshot) {
+
+                        let total_star_count = 0, count = 0;
+                        reviewQuerySnapshot.forEach(function (reviewDoc) {
+                            const review = reviewDoc.data();
+
+                            total_star_count += review.star_count;
+                            count++;
+                        });
+
+                        if (count > 0) {
+                            data.starCount = total_star_count / count;
+                        } else {
+                            data.starCount = 0;
+                        }
+
+                        firebase.firestore().collection('Listings').doc(data.id).set(data);
+                        onDone();
+                    });
+
+
                 }).catch(function (error) {
                     alert(error);
                 });
@@ -63,7 +83,7 @@ class ReviewModal extends React.Component {
                 <View style={styles.body}>
                     <View style={ModalHeaderStyle.bar}>
                         <Text style={ModalHeaderStyle.title}>Add a Review</Text>
-                        <TextButton style={{...ModalHeaderStyle.rightButton, paddingRight: 10}} onPress={this.onCancel} >Cancel</TextButton>
+                        <TextButton style={{ ...ModalHeaderStyle.rightButton, paddingRight: 10 }} onPress={this.onCancel} >Cancel</TextButton>
                     </View>
                     <StarRating containerStyle={styles.starRatingContainer}
                         disabled={false}
