@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: AppStyles.fontSize.title,
         fontWeight: 'bold',
-        color: AppStyles.color.main,
+        color: AppStyles.color.tint,
         marginTop: 20,
         marginBottom: 20,
     },
