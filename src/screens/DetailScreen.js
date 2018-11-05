@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, FlatList, StyleSheet, ScrollView, TouchableOpacity, Text, View } from 'react-native';
+import { Platform, Dimensions, FlatList, StyleSheet, ScrollView, TouchableOpacity, Text, View } from 'react-native';
 import { AppStyles, AppIcon, HeaderButtonStyle } from '../AppStyles';
 import firebase from 'react-native-firebase';
 import FastImage from 'react-native-fast-image'
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
         flex: 1,
-        height: Dimensions.get('window').height - Configuration.home.tab_bar_height - 25,
+        height: Dimensions.get('window').height - Configuration.home.tab_bar_height - (Platform.OS === 'ios' ? 0 : 25),
         position: 'absolute',
     },
     title: {
