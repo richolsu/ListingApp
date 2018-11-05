@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
         flex: 1,
-        height: Dimensions.get('window').height - Configuration.home.tab_bar_height - (Platform.OS === 'ios' ? 0 : 25),
+        height: Dimensions.get('window').height - Configuration.home.tab_bar_height - 25,
         position: 'absolute',
     },
     title: {
