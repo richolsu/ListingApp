@@ -71,6 +71,7 @@ export const AppIcon = {
     starFilled: require('../assets/icons/star_filled.png'),
     starNoFilled: require('../assets/icons/star_nofilled.png'),
     defaultUser: require('../assets/icons/default_user.jpg'),
+    logout: require('../assets/icons/shutdown.png'),
   }
 
 }

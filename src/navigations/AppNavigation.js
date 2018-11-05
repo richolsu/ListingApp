@@ -1,7 +1,7 @@
 import React from 'react';
 import { Animated, Easing, Image, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
-import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+import { DrawerNavigator, createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 import { createReactNavigationReduxMiddleware, reduxifyNavigator } from 'react-navigation-redux-helpers';
 import HomeScreen from '../screens/HomeScreen';
 import CategoryScreen from '../screens/CategoryScreen';
@@ -16,6 +16,7 @@ import SignupScreen from '../screens/SignupScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import { AppIcon, AppStyles } from '../AppStyles';
 import { Configuration } from '../Configuration';
+import DrawerContainer from '../components/DrawerContainer';
 
 const noTransitionConfig = () => ({
     transitionSpec: {
@@ -46,6 +47,7 @@ const LoginStack = createStackNavigator({
     }
 );
 
+
 const HomeStack = createStackNavigator({
     Home: { screen: HomeScreen },
     Listing: { screen: ListingScreen },
@@ -64,6 +66,7 @@ const HomeStack = createStackNavigator({
         cardStyle: { backgroundColor: '#FFFFFF' },
     }
 );
+
 
 const CollectionStack = createStackNavigator({
     Category: { screen: CategoryScreen },
@@ -158,14 +161,24 @@ const TabNavigator = createBottomTabNavigator(
     }
 );
 
+// drawer stack
+const DrawerStack = DrawerNavigator({
+    Tab: TabNavigator
+}, {
+        drawerPosition: 'left',
+        initialRouteName: 'Tab',
+        drawerWidth: 200,
+        contentComponent: DrawerContainer
+    })
+
 // Manifest of possible screens
 const RootNavigator = createStackNavigator({
     LoginStack: { screen: LoginStack },
-    TabNavigator: { screen: TabNavigator }
+    DrawerStack: { screen: DrawerStack }
 }, {
         // Default config for all screens
         headerMode: 'none',
-        initialRouteName: 'loginStack',
+        initialRouteName: 'DrawerStack',
         transitionConfig: noTransitionConfig,
         navigationOptions: ({ navigation }) => ({
             color: 'black',

@@ -10,7 +10,7 @@ import { Configuration } from '../Configuration';
 class MapScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         title: 'Map View',
-        headerRight: <HeaderButton icon={AppIcon.images.map} onPress={() => { navigation.goBack(null) }} />,
+        // headerRight: <HeaderButton icon={AppIcon.images.map} onPress={() => { navigation.goBack(null) }} />,
     });
 
     constructor(props) {

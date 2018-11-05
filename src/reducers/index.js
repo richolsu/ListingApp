@@ -14,7 +14,7 @@ function nav(state = initialNavState, action) {
   switch (action.type) {
     case 'Login':
       nextState = RootNavigator.router.getStateForAction(
-        NavigationActions.navigate({ routeName: 'TabNavigator' }),
+        NavigationActions.navigate({ routeName: 'DrawerStack' }),
         state
       );
       break;

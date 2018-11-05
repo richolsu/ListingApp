@@ -1,20 +1,27 @@
 import React from 'react';
-import { ScrollView, Dimensions, ActivityIndicator, TouchableOpacity, FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Button from 'react-native-button';
-import HeaderButton from '../components/HeaderButton';
+import FastImage from 'react-native-fast-image';
 import firebase from 'react-native-firebase';
-import { AppStyles, AppIcon, TwoColumnListStyle } from '../AppStyles';
-import FastImage from 'react-native-fast-image'
-import SavedButton from '../components/SavedButton';
 import { connect } from 'react-redux';
-import { Configuration } from '../Configuration';
+import { AppIcon, AppStyles, HeaderButtonStyle, TwoColumnListStyle } from '../AppStyles';
+import HeaderButton from '../components/HeaderButton';
 import PostModal from '../components/PostModal';
+import SavedButton from '../components/SavedButton';
+import { Configuration } from '../Configuration';
 
 class HomeScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         title: 'Home',
-        headerLeft: <HeaderButton icon={AppIcon.images.map} onPress={() => { navigation.navigate('Map') }} />,
-        headerRight: <HeaderButton icon={AppIcon.images.compose} onPress={() => { navigation.state.params.onPressPost() }} />,
+        headerLeft:
+            <TouchableOpacity onPress={() => { navigation.openDrawer() }} >
+                <FastImage style={styles.userPhoto} resizeMode={FastImage.resizeMode.cover} source={AppIcon.images.defaultUser} />
+            </TouchableOpacity>,
+        headerRight:
+            <View style={HeaderButtonStyle.multi}>
+                <HeaderButton icon={AppIcon.images.compose} onPress={() => { navigation.state.params.onPressPost() }} />
+                <HeaderButton icon={AppIcon.images.map} onPress={() => { navigation.navigate('Map') }} />
+            </View>,
     });
 
     constructor(props) {
@@ -277,6 +284,12 @@ const styles = StyleSheet.create({
         color: AppStyles.color.categoryTitle,
         margin: 10,
     },
+    userPhoto: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        marginLeft: 5,
+    }
 
 });
 
