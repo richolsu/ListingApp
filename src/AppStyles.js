@@ -48,7 +48,10 @@ export const AppStyles = {
 
 export const AppIcon = {
   container: {
-    padding: 10,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 8,
+    marginRight: 10
   },
   style: {
     tintColor: AppStyles.color.tint,
@@ -113,7 +116,7 @@ export const ListStyle = StyleSheet.create({
     marginLeft: 10,
   },
   leftSubtitle: {
-    flex: 1,
+    flex: 2,
   },
   time: {
     color: AppStyles.color.description,
@@ -126,10 +129,13 @@ export const ListStyle = StyleSheet.create({
     color: AppStyles.color.location,
   },
   price: {
+    flex: 1,
     fontSize: 14,
     color: AppStyles.color.subtitle,
     fontFamily: AppStyles.fontName.bold,
     textAlignVertical: 'bottom',
+    alignSelf: 'flex-end',
+    textAlign: 'right',
   },
   avatarStyle: {
     height: 80,

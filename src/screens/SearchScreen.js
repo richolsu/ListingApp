@@ -101,7 +101,7 @@ class SearchScreen extends React.Component {
                         <Text style={ListStyle.time}>{Configuration.timeFormat(item.post_time)}</Text>
                         <Text style={ListStyle.place}>{item.place}</Text>
                     </View>
-                    <Text style={ListStyle.price}>{item.price}</Text>
+                    <Text numberOfLines={1} style={ListStyle.price}>{item.price}</Text>
                 </View>
             }
             onPress={() => this.onPress(item)}
