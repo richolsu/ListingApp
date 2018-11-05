@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, Easing, Image } from 'react-native';
+import { Animated, Easing, Image, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 import { createReactNavigationReduxMiddleware, reduxifyNavigator } from 'react-navigation-redux-helpers';
@@ -38,6 +38,10 @@ const LoginStack = createStackNavigator({
 }, {
         initialRouteName: 'Welcome',
         headerMode: 'float',
+        navigationOptions: ({ navigation }) => ({
+            headerTintColor: 'red',
+            headerTitleStyle: styles.headerTitleStyle,
+        }),
         cardStyle: { backgroundColor: '#FFFFFF' },
     }
 );
@@ -51,15 +55,11 @@ const HomeStack = createStackNavigator({
 }, {
         initialRouteName: 'Home',
         headerMode: 'float',
+
         headerLayoutPreset: 'center',
         navigationOptions: ({ navigation }) => ({
-            headerTitleStyle: {
-                fontWeight: 'bold',
-                textAlign: 'center',
-                flex: 1,
-                alignSelf: 'center',
-                fontFamily: AppStyles.fontName.main,
-            },
+            headerTintColor: 'red',
+            headerTitleStyle: styles.headerTitleStyle,
         }),
         cardStyle: { backgroundColor: '#FFFFFF' },
     }
@@ -76,13 +76,8 @@ const CollectionStack = createStackNavigator({
         headerLayoutPreset: 'center',
         cardStyle: { backgroundColor: '#FFFFFF' },
         navigationOptions: ({ navigation }) => ({
-            headerTitleStyle: {
-                fontWeight: 'bold',
-                textAlign: 'center',
-                alignSelf: 'center',
-                flex: 1,
-                fontFamily: AppStyles.fontName.main,
-            },
+            headerTintColor: 'red',
+            headerTitleStyle: styles.headerTitleStyle,
         }),
     }
 );
@@ -97,13 +92,8 @@ const SavedListingStack = createStackNavigator({
         headerLayoutPreset: 'center',
         cardStyle: { backgroundColor: '#FFFFFF' },
         navigationOptions: ({ navigation }) => ({
-            headerTitleStyle: {
-                fontWeight: 'bold',
-                textAlign: 'center',
-                alignSelf: 'center',
-                flex: 1,
-                fontFamily: AppStyles.fontName.main,
-            },
+            headerTintColor: 'red',
+            headerTitleStyle: styles.headerTitleStyle,
         }),
 
     }
@@ -119,13 +109,8 @@ const SearchStack = createStackNavigator({
         headerLayoutPreset: 'center',
         cardStyle: { backgroundColor: '#FFFFFF' },
         navigationOptions: ({ navigation }) => ({
-            headerTitleStyle: {
-                fontWeight: 'bold',
-                textAlign: 'center',
-                alignSelf: 'center',
-                flex: 1,
-                fontFamily: AppStyles.fontName.main,
-            },
+            headerTintColor: 'red',
+            headerTitleStyle: styles.headerTitleStyle,
         }),
     }
 );
@@ -154,10 +139,10 @@ const TabNavigator = createBottomTabNavigator(
                     iconName = AppIcon.images.search;
                 }
 
-                
+
                 // You can return any component that you like here! We usually use an
                 // icon component from react-native-vector-icons
-                return <Image style={{tintColor: focused?AppStyles.color.tint:AppStyles.color.grey}}  source={iconName}/>;
+                return <Image style={{ tintColor: focused ? AppStyles.color.tint : AppStyles.color.grey }} source={iconName} />;
             },
         }),
         initialLayout: {
@@ -181,7 +166,10 @@ const RootNavigator = createStackNavigator({
         // Default config for all screens
         headerMode: 'none',
         initialRouteName: 'loginStack',
-        transitionConfig: noTransitionConfig
+        transitionConfig: noTransitionConfig,
+        navigationOptions: ({ navigation }) => ({
+            color: 'black',
+        })
     })
 
 const AppWithNavigationState = reduxifyNavigator(RootNavigator, 'root');
@@ -191,5 +179,16 @@ const mapStateToProps = state => ({
 });
 
 const AppNavigator = connect(mapStateToProps)(AppWithNavigationState);
+
+const styles = StyleSheet.create({
+    headerTitleStyle: {
+        fontWeight: 'bold',
+        textAlign: 'center',
+        alignSelf: 'center',
+        color: 'black',
+        flex: 1,
+        fontFamily: AppStyles.fontName.main,
+    },
+})
 
 export { RootNavigator, AppNavigator, middleware };
