@@ -35,13 +35,13 @@ const styles = StyleSheet.create({
     title: {
         fontSize: AppStyles.fontSize.title,
         fontWeight: 'bold',
-        color: AppStyles.color.main,
+        color: AppStyles.color.tint,
         marginTop: 20,
         marginBottom: 20,
     },
     loginContainer: {
         width: AppStyles.buttonWidth.main,
-        backgroundColor: AppStyles.color.main,
+        backgroundColor: AppStyles.color.tint,
         borderRadius: AppStyles.borderRadius.main,
         padding: 10,
         marginTop: 30,
@@ -55,11 +55,11 @@ const styles = StyleSheet.create({
         borderRadius: AppStyles.borderRadius.main,
         padding: 10,
         borderWidth: 1,
-        borderColor: AppStyles.color.text,
+        borderColor: AppStyles.color.tint,
         marginTop: 30,
     },
     signupText: {
-        color: AppStyles.color.text
+        color: AppStyles.color.tint
     },
 })
 

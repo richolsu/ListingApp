@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     },
     loginContainer: {
         width: AppStyles.buttonWidth.main,
-        backgroundColor: AppStyles.color.main,
+        backgroundColor: AppStyles.color.tint,
         borderRadius: AppStyles.borderRadius.main,
         padding: 10,
         marginTop: 30,

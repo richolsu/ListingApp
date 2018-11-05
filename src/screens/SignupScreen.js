@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: AppStyles.fontSize.title,
         fontWeight: 'bold',
-        color: AppStyles.color.main,
+        color: AppStyles.color.tint,
         marginTop: 20,
         marginBottom: 20,
     },
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     },
     loginContainer: {
         width: AppStyles.buttonWidth.main,
-        backgroundColor: AppStyles.color.main,
+        backgroundColor: AppStyles.color.tint,
         borderRadius: AppStyles.borderRadius.main,
         padding: 10,
         marginTop: 30,
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     },
     facebookContainer: {
         width: AppStyles.buttonWidth.main,
-        backgroundColor: AppStyles.color.facebook,
+        backgroundColor: AppStyles.color.tint,
         borderRadius: AppStyles.borderRadius.main,
         padding: 10,
         marginTop: 30,
