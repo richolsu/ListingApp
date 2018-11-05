@@ -9,6 +9,7 @@ import HeaderButton from '../components/HeaderButton';
 import StarRating from 'react-native-star-rating';
 import { Configuration } from '../Configuration';
 import { connect } from 'react-redux';
+import ReviewModal from '../components/ReviewModal';
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 const LATITUDEDELTA = 0.0422;
@@ -53,6 +54,7 @@ class DetailsScreen extends React.Component {
             reviews: [],
             saved: false,
             users: {},
+            reviewModalVisible: false,
         };
     }
 
@@ -107,7 +109,11 @@ class DetailsScreen extends React.Component {
     }
 
     onPressReview = () => {
-        this.props.navigation.navigate('Review', { item: this.state.data });
+        this.setState({ reviewModalVisible: true });
+    }
+
+    onReviewCancel = () => {
+        this.setState({ reviewModalVisible: false });
     }
 
     onPressSave = () => {
@@ -266,6 +272,12 @@ class DetailsScreen extends React.Component {
                     keyExtractor={item => `${item.id}`}
                     initialNumToRender={5}
                 />
+                {this.state.reviewModalVisible &&
+                    <ReviewModal
+                        listing={this.state.data}
+                        onCancel={this.onReviewCancel}
+                        onDone={this.onReviewCancel}></ReviewModal>
+                }
             </ScrollView>
         );
     }

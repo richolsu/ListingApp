@@ -1,42 +1,23 @@
 import React from 'react';
-import { StyleSheet, TextInput, View, Image } from "react-native";
+import { Modal, StyleSheet, Text, TextInput, View, Image } from "react-native";
 import TextButton from 'react-native-button';
 import firebase from 'react-native-firebase';
 import StarRating from 'react-native-star-rating';
 import { connect } from 'react-redux';
-import { AppStyles, HeaderButtonStyle, AppIcon } from '../AppStyles';
+import { AppStyles, ModalHeaderStyle, AppIcon } from '../AppStyles';
 import Button from 'react-native-button';
 
-class ReviewScreen extends React.Component {
-    static navigationOptions = ({ navigation }) => ({
-        title: 'Add a Review',
-        headerRight: (<TextButton
-            onPress={() => { navigation.goBack(null) }}
-            style={HeaderButtonStyle.rightButton}
-        >Cancel</TextButton>),
-    });
-
+class ReviewModal extends React.Component {
     constructor(props) {
         super(props);
 
-        const { navigation } = props;
-        const item = navigation.getParam('item');
-
+        const listing = this.props.listing;
         this.state = {
-            data: item,
+            data: listing,
             content: '',
             starCount: 5,
         };
     }
-
-    componentDidMount() {
-
-    }
-
-    componentWillUnmount() {
-
-    }
-
 
     onPostReview = () => {
         const navigation = this.props.navigation;
@@ -45,7 +26,7 @@ class ReviewScreen extends React.Component {
             return;
         }
 
-        const user = this.props.user;
+        const { user, onDone } = this.props;
         const { data, starCount, content } = this.state;
 
         firebase.firestore().collection('Reviews')
@@ -62,38 +43,50 @@ class ReviewScreen extends React.Component {
                     content: content,
                     review_time: firebase.firestore.FieldValue.serverTimestamp(),
                 }).then(function (docRef) {
-                    navigation.goBack();
+                    onDone();
                 }).catch(function (error) {
                     alert(error);
                 });
             });
-
-
     }
+
+    onCancel = () => {
+        this.props.onCancel();
+    }
+
     render() {
         return (
-            <View style={styles.body}>
-                <StarRating containerStyle={styles.starRatingContainer}
-                    disabled={false}
-                    maxStars={5}
-                    starSize={25}
-                    starStyle={styles.starStyle}
-                    selectedStar={(rating) => this.setState({ starCount: rating })}
-                    emptyStar={AppIcon.images.starNoFilled}
-                    fullStar={AppIcon.images.starFilled}
-                    rating={this.state.starCount}
-                />
-                <TextInput
-                    multiline={true}
-                    numberOfLines={2}
-                    style={styles.input}
-                    onChangeText={(text) => this.setState({ content: text })}
-                    value={this.state.content}
-                    placeholder="Start typing"
-                    placeholderTextColor={AppStyles.color.grey}
-                    underlineColorAndroid='transparent' />
-                <Button containerStyle={styles.btnContainer} style={styles.btnText} onPress={() => this.onPostReview()}>Add review</Button>
-            </View>
+            <Modal
+                animationType="slide"
+                transparent={false}
+                onRequestClose={this.onCancel} >
+                <View style={styles.body}>
+                    <View style={ModalHeaderStyle.bar}>
+                        <Text style={ModalHeaderStyle.title}>Add a Review</Text>
+                        <TextButton style={{...ModalHeaderStyle.rightButton, paddingRight: 10}} onPress={this.onCancel} >Cancel</TextButton>
+                    </View>
+                    <StarRating containerStyle={styles.starRatingContainer}
+                        disabled={false}
+                        maxStars={5}
+                        starSize={25}
+                        starStyle={styles.starStyle}
+                        selectedStar={(rating) => this.setState({ starCount: rating })}
+                        emptyStar={AppIcon.images.starNoFilled}
+                        fullStar={AppIcon.images.starFilled}
+                        rating={this.state.starCount}
+                    />
+                    <TextInput
+                        multiline={true}
+                        numberOfLines={2}
+                        style={styles.input}
+                        onChangeText={(text) => this.setState({ content: text })}
+                        value={this.state.content}
+                        placeholder="Start typing"
+                        placeholderTextColor={AppStyles.color.grey}
+                        underlineColorAndroid='transparent' />
+                    <Button containerStyle={styles.btnContainer} style={styles.btnText} onPress={() => this.onPostReview()}>Add review</Button>
+                </View>
+            </Modal >
         );
     }
 }
@@ -120,7 +113,7 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     starStyle: {
-        tintColor: AppStyles.color.tint 
+        tintColor: AppStyles.color.tint
     },
     btnContainer: {
         width: '100%',
@@ -138,4 +131,4 @@ const mapStateToProps = state => ({
     user: state.auth.user,
 });
 
-export default connect(mapStateToProps)(ReviewScreen);
+export default connect(mapStateToProps)(ReviewModal);

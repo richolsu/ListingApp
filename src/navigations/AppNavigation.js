@@ -8,7 +8,6 @@ import CategoryScreen from '../screens/CategoryScreen';
 import DetailScreen from '../screens/DetailScreen';
 import ListingScreen from '../screens/ListingScreen';
 import LoginScreen from '../screens/LoginScreen';
-import ReviewScreen from '../screens/ReviewScreen';
 import MapScreen from '../screens/MapScreen';
 import SavedListingScreen from '../screens/SavedListingScreen';
 import SearchScreen from '../screens/SearchScreen';
@@ -52,7 +51,6 @@ const HomeStack = createStackNavigator({
     Home: { screen: HomeScreen },
     Listing: { screen: ListingScreen },
     Detail: { screen: DetailScreen },
-    Review: { screen: ReviewScreen },
     Map: { screen: MapScreen },
 }, {
         initialRouteName: 'Home',
