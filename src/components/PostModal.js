@@ -194,15 +194,12 @@ class PostModal extends React.Component {
                 user_id: this.props.user.id,
                 category_id: this.state.category.id,
                 description: this.state.description,
-                latitude: this.state.location.latitude,
-                longitude: this.state.location.longitude,
                 mapping: this.state.filter,
                 name: this.state.title,
-                price: parseInt(this.state.price),
+                price: this.state.price,
                 coordinate: new firebase.firestore.GeoPoint(this.state.location.latitude, this.state.location.longitude),
                 post_time: firebase.firestore.FieldValue.serverTimestamp(),
-                //TODO:
-                place: 'San Francisco, CA',
+                place: this.state.address,
                 cover_photo: photoUrls[0],
                 list_of_photos: photoUrls,
             }).then(function (docRef) {
@@ -275,7 +272,6 @@ class PostModal extends React.Component {
                             <Text style={styles.title}>Price</Text>
                             <TextInput
                                 style={styles.priceInput}
-                                keyboardType='numeric'
                                 value={this.state.price}
                                 onChangeText={(text) => this.setState({ price: text })}
                                 placeholderTextColor={AppStyles.color.grey}
